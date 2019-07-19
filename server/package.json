@@ -1,0 +1,14 @@
+{
+  "name": "react-fullstack",
+  "scripts": {
+    "start": "node src/index.js",
+    "prisma": "prisma"
+  },
+  "dependencies": {
+    "graphql-yoga": "1.18.1",
+    "prisma-client-lib": "1.34.1"
+  },
+  "devDependencies": {
+    "prisma": "1.22.1"
+  }
+}
