@@ -1,0 +1,14 @@
+@import '~react-md/src/scss/react-md';
+
+.drawer-container {
+  header {
+    background-color: $md-primary-color;
+    .md-title {
+      color: white;
+    }
+  }
+
+  .md-toolbar--action-right {
+    padding: 10px;
+  }
+}
