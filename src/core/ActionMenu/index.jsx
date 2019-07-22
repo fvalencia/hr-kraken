@@ -26,7 +26,7 @@ class ActionMenu extends Component {
             </IconSeparator>
           }
         >
-          <Avatar src="./dogo.png" />
+          <Avatar src="/dogo.png" />
         </AccessibleFakeButton>
       </DropdownMenu>
     );

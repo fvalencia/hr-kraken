@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import MainDrawer from '../MainDrawer';
@@ -9,13 +9,11 @@ class Layout extends Component {
   render() {
     return (
       <Router>
-        <Fragment>
-          <MainDrawer>
-            <div className="page-content">
-              <RouteSwitch />
-            </div>
-          </MainDrawer>
-        </Fragment>
+        <MainDrawer>
+          <div className="page-content">
+            <RouteSwitch />
+          </div>
+        </MainDrawer>
       </Router>
     );
   }
