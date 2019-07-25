@@ -1,0 +1,11 @@
+type Application {
+  id: ID! @id
+  startDate: DateTime
+  endDate: DateTime
+  feedback: String
+  responsable: String
+  result: Result
+  candidate: Candidate! @relation(link: INLINE)
+  opening: Opening! @relation(link: INLINE)
+  steps: [ApplicationStep!]
+}

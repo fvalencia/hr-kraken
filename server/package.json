@@ -2,7 +2,9 @@
   "name": "react-fullstack",
   "scripts": {
     "start": "node src/index.js",
-    "prisma": "prisma"
+    "prisma": "prisma",
+    "deploy": "prisma deploy",
+    "seed": "prisma reset && prisma seed"
   },
   "dependencies": {
     "graphql-yoga": "1.18.1",

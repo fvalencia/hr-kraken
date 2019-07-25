@@ -1,0 +1,20 @@
+type Candidate {
+  id: ID! @id
+  name: String!
+  title: String!
+  email: String!
+  yearsOfExperience: Int
+  phone: String
+  skypeId: String
+  salaryExpectation: Float
+  cv: String
+  applications: [Application!]
+  seniority: Seniority!
+  status: Status!
+}
+
+enum Seniority {
+  JUNIOR
+  MIDDLE
+  SENIOR
+}

@@ -1,0 +1,6 @@
+enum Result {
+  BAD
+  AVERAGE
+  GOOD
+  EXCELENT
+}
