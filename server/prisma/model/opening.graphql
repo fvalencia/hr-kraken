@@ -1,0 +1,15 @@
+type Opening {
+  id: ID! @id
+  jobTitle: String!
+  jobDescription: String!
+  company: String
+  maxSalaryRange: Float
+  steps: [Step!]
+  applications: [Application!]
+  status: OpeningStatus
+}
+
+enum OpeningStatus {
+  OPEN
+  CLOSED
+}

@@ -5,19 +5,49 @@ var typeDefs = require("./prisma-schema").typeDefs;
 
 var models = [
   {
-    name: "Post",
+    name: "Candidate",
+    embedded: false
+  },
+  {
+    name: "Seniority",
+    embedded: false
+  },
+  {
+    name: "Application",
+    embedded: false
+  },
+  {
+    name: "Result",
+    embedded: false
+  },
+  {
+    name: "Status",
+    embedded: false
+  },
+  {
+    name: "Opening",
+    embedded: false
+  },
+  {
+    name: "OpeningStatus",
+    embedded: false
+  },
+  {
+    name: "ApplicationStep",
+    embedded: false
+  },
+  {
+    name: "Step",
+    embedded: false
+  },
+  {
+    name: "TemplateStep",
     embedded: false
   }
 ];
 exports.Prisma = prisma_lib_1.makePrismaClientClass({
   typeDefs,
   models,
-  endpoint: `https://us1.prisma.sh/public-mirrorlifter-291/react-fullstack/dev`
+  endpoint: `https://us1.prisma.sh/felipe-valencia/hr-kraken/dev`
 });
 exports.prisma = new exports.Prisma();
-var models = [
-  {
-    name: "Post",
-    embedded: false
-  }
-];

@@ -1,28 +1,112 @@
+# mutation {
+#   post1: createPost(
+#     data: {
+#       title: "Join us for GraphQL Conf 2019 in Berlin"
+#       content: "https://www.graphqlconf.org/"
+#       published: true
+#     }
+#   ) {
+#     id
+#   }
+
+#   post2: createPost(
+#     data: {
+#       title: "Subscribe to GraphQL Weekly for community news"
+#       content: "https://graphqlweekly.com/"
+#       published: true
+#     }
+#   ) {
+#     id
+#   }
+
+#   post3: createPost(
+#     data: {
+#       title: "Follow Prisma on Twitter"
+#       content: "https://twitter.com/prisma"
+#     }
+#   ) {
+#     id
+#   }
+# }
+
 mutation {
-  post1: createPost(
+  # candidate1: createCandidate(
+  #   data: {
+  #     name: "Felipe Valencia"
+  #     email: "luisfelipevalenciatellez@gmail.com"
+  #     phone: "+573172146907"
+  #     skypeId: "luisfelipevalenciatellez"
+  #     status: IN_PROGRESS
+  #     applications: {
+  #       create: {
+  #         startDate: "2019-05-20"
+  #         endDate: "2019-06-10"
+  #         feedback: "Excellent applicant"
+  #         result: GOOD
+  #       }
+  #     }
+  #   }
+  # ) {
+  #   id
+  # }
+
+  # step1: createStep(data: { name: "HR First Interview" })
+  # step2: createStep(data: { name: "English Interview" })
+  # step3: createStep(data: { name: "Technical Test" })
+  # step4: createStep(data: { name: "Team Lead Interview" })
+  # step5: createStep(data: { name: "Client Interview" })
+
+  templateStep1: createTemplateStep(
     data: {
-      title: "Join us for GraphQL Conf 2019 in Berlin"
-      content: "https://www.graphqlconf.org/"
-      published: true
+      name: "Common Template"
+      steps: {
+        create: [
+          { id: 1, name: "HR First Interview" }
+          { id: 2, name: "English Interview" }
+          { id: 3, name: "Technical Test" }
+          { id: 4, name: "Team Lead Interview" }
+          { id: 5, name: "Client Interview" }
+        ]
+      }
     }
   ) {
     id
   }
 
-  post2: createPost(
+  application1: createApplication(
     data: {
-      title: "Subscribe to GraphQL Weekly for community news"
-      content: "https://graphqlweekly.com/"
-      published: true
-    }
-  ) {
-    id
-  }
-
-  post3: createPost(
-    data: {
-      title: "Follow Prisma on Twitter"
-      content: "https://twitter.com/prisma"
+      startDate: "2019-07-25"
+      responsable: "Valentina Cadena"
+      candidate: {
+        create: {
+          name: "Yossely Mendoza"
+          email: "test@test.com"
+          title: "Senior Front End"
+          phone: "+5712345678"
+          skypeId: "test"
+          status: IN_PROGRESS
+          seniority: SENIOR
+        }
+      }
+      opening: {
+        create: {
+          jobTitle: "Senior Front End"
+          jobDescription: "Angular 6"
+          company: "Publicist Group"
+          maxSalaryRange: 3000000
+          status: OPEN
+          steps: { connect: [{ id: 1 }, { id: 2 }, { id: 3 }, { id: 4 }, { id: 5 }] }
+        }
+      }
+      steps: {
+        create: [
+          { step: { connect: { id: 1 } } }
+          { step: { connect: { id: 2 } } }
+          { step: { connect: { id: 3 } } }
+          { step: { connect: { id: 4 } } }
+          { step: { connect: { id: 5 } } }
+        ]
+      }
     }
   ) {
     id

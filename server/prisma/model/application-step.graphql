@@ -1,0 +1,9 @@
+type ApplicationStep {
+  id: ID! @id
+  application: Application @relation(link: INLINE)
+  step: Step!
+  feedback: String
+  completionDate: DateTime
+  result: Result
+  responsable: String
+}

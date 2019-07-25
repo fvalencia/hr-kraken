@@ -1,0 +1,7 @@
+enum Status {
+  AVAILABLE
+  IN_PROGRESS
+  HIRED
+  QUIT_PROCESS
+  REJECTED
+}
