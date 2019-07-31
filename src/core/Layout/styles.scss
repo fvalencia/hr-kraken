@@ -4,4 +4,16 @@
     flex: 1;
     max-width: calc(100vw - 256px);
     /* background-color: grey; */
+    
+    /* 
+    padding: 20px;
+    position: relative;
+    height: 90vh;
+    */
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }
