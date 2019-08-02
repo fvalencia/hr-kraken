@@ -51,6 +51,12 @@ export const routes = [
         to: '/openings/c'
       }
     ]
+  },
+  {
+    key: 'applications',
+    label: 'Applications',
+    icon: 'done_all',
+    to: '/applications'
   }
   // If you need a divider or a subheader
   //   { key: 'divider', divider: true },
