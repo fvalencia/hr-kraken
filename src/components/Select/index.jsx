@@ -13,7 +13,7 @@ class Select extends Component {
   };
 
   render() {
-    const { label, placeholder, menuItems = [], noSearch, searchPlaceholder, onChange } = this.props;
+    const { label, placeholder, menuItems = [], noSearch, searchPlaceholder, onChange, ...rest } = this.props;
     const { searchText } = this.state;
     let items = searchText ? menuItems.filter(item => item.label.toLowerCase().includes(searchText.toLowerCase())) : menuItems;
     if (!noSearch) {
@@ -53,6 +53,7 @@ class Select extends Component {
         defaultValue={this.props.defaultValue}
         required
         errorText={`this field is required`}
+        {...rest}
       />
     );
   }

@@ -30,7 +30,34 @@ html {
 }
 
 .hrk-fontSecondary {
-  font-size: .93em;
+  font-size: 0.93em;
   font-weight: inherit;
   color: #707d83;
+}
+
+.hrk-result-selection {
+  width: 100%;
+  padding: 4px;
+  padding-top: 6px;
+  .md-text--secondary {
+    font-size: 12px;
+  }
+  .md-selection-control-container {
+    width: 25%;
+    height: inherit;
+    padding-top: 3px;
+    padding-bottom: 5px;
+    box-shadow: 1px 0 0 0 #eee, 0 1px 0 0 #eee, 1px 1px 0 0 #eee, 1px 0 0 0 #eee inset, 0 1px 0 0 #eee inset;
+    position: relative;
+    z-index: 1;
+    &.selected {
+      box-shadow: 1px 0 0 0 $md-secondary-color, 0 1px 0 0 $md-secondary-color, 1px 1px 0 0 $md-secondary-color,
+        1px 0 0 0 $md-secondary-color inset, 0 1px 0 0 $md-secondary-color inset;
+      z-index: 2;
+    }
+    .md-selection-control-label {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }

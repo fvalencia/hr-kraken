@@ -1,13 +1,13 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Button, DialogContainer, DatePicker, TextField, Snackbar } from 'react-md';
+import { Button, DialogContainer, DatePicker, TextField, FontIcon, SelectionControlGroup } from 'react-md';
 import { Query, Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import './styles.scss';
 import Select from '../../components/Select';
-
+import { RESULTS } from '../../constants/result';
+import { FORMAT_OPTIONS } from '../../constants/dateFormat';
 class ApplicationDialog extends PureComponent {
   state = {
-    notifications: [],
     visible: this.props.application ? true : false,
     application: this.props.application
       ? { ...this.props.application, candidate: this.props.application.candidate.id, opening: this.props.application.opening.id }
@@ -17,7 +17,7 @@ class ApplicationDialog extends PureComponent {
           candidate: null,
           opening: null,
           feedback: null,
-          responsable: null,
+          responsible: null,
           result: null
         }
   };
@@ -41,50 +41,55 @@ class ApplicationDialog extends PureComponent {
   };
 
   onChange = (key, value) => {
-    this.setState({ application: { [key]: value } });
+    this.setState({ application: { ...this.state.application, [key]: value } });
   };
 
-  onSubmit = addApplication => {
-    const { startDate, responsible, candidate, opening } = this.state;
-    addApplication({
-      variables: {
-        data: {
+  onSubmit = mutationFn => {
+    const isCreate = this.props.type === 'create';
+    const { id, startDate, responsible, candidate, opening, endDate, result, feedback } = this.state.application;
+    const where = !isCreate ? { id } : undefined;
+    const data = isCreate
+      ? {
           startDate: startDate.toISOString(),
-          responsable: responsible,
+          responsible: responsible,
           candidate: { connect: { id: candidate } },
           opening: { connect: { id: opening } }
         }
+      : {
+          endDate: endDate.toISOString(),
+          result,
+          feedback
+        };
+    mutationFn({
+      variables: {
+        data,
+        where
       }
     });
     this.hide();
   };
 
-  onCompleted = () => {
-    this.setState({ notifications: [...this.state.notifications, { text: 'New Application Created' }] });
-    // Refresh on change.
-    if (this.props.onApplicationsChange) {
-      this.props.onApplicationsChange();
-    }
-  };
-
-  dismissToast = () => {
-    const [, ...notifications] = this.state.notifications;
-    this.setState({ notifications });
-  };
-
   render() {
-    const { visible, notifications, application } = this.state;
-    const { candidate, opening, startDate, responsable } = application;
-    const disabled = !candidate || !opening || !startDate || !responsable;
-    const title = this.props.type === 'create' ? 'Add' : 'Edit';
-    const buttonText = this.props.type === 'create' ? 'Add' : 'Save';
+    const { visible, application } = this.state;
+    const { candidate, opening, startDate, responsible, result = 'AVERAGE', feedback, endDate } = application;
+    const isCreate = this.props.type === 'create';
+    const disabled = !candidate || !opening || !startDate || !responsible || (!isCreate && (!feedback || !endDate));
+    const title = isCreate ? 'Add' : 'Assess';
+    const buttonText = isCreate ? 'Add' : 'Send';
+    const radioControls = RESULTS.map(({ label, value, icon }) => ({
+      label,
+      value,
+      checkedRadioIcon: <FontIcon>{icon}</FontIcon>,
+      uncheckedRadioIcon: <FontIcon>{icon}</FontIcon>,
+      className: result === value ? 'selected' : ''
+    }));
     return (
       <div>
         <Button floating primary className="add-button" onClick={this.show}>
           add
         </Button>
-        <Mutation mutation={ADD_APPLICATION} onCompleted={this.onCompleted}>
-          {addApplication => (
+        <Mutation mutation={isCreate ? ADD_APPLICATION : UPDATE_APPLICATION} onCompleted={() => this.props.onCompleted(isCreate)}>
+          {mutationFn => (
             <Fragment>
               <DialogContainer
                 id="simple-list-dialog"
@@ -93,15 +98,15 @@ class ApplicationDialog extends PureComponent {
                 onHide={this.hide}
                 actions={[
                   { secondary: true, children: 'Cancel', onClick: this.hide, type: 'button' },
-                  { secondary: false, children: buttonText, onClick: () => this.onSubmit(addApplication), disabled, type: 'submit' }
+                  { secondary: false, children: buttonText, onClick: () => this.onSubmit(mutationFn), disabled, type: 'submit' }
                 ]}
                 className="application-dialog"
               >
                 <div className="md-grid">
                   <DatePicker
-                    id="appointment-date-auto"
+                    id="startDate"
                     label="Star Date"
-                    className="md-cell md-cell--12"
+                    className={!isCreate ? 'md-cell md-cell--6' : 'md-cell md-cell--12'}
                     portal={true}
                     lastChild={true}
                     disableScrollLocking={true}
@@ -110,14 +115,36 @@ class ApplicationDialog extends PureComponent {
                     required
                     onChange={(_, dateObject) => this.onChange('startDate', dateObject)}
                     errorText={`this field is required`}
+                    disabled={!isCreate ? true : undefined}
+                    formatOptions={FORMAT_OPTIONS}
+                    locales="en-US"
                   />
+                  {!isCreate ? (
+                    <DatePicker
+                      id="endDate"
+                      label="End Date"
+                      className="md-cell md-cell--6"
+                      portal={true}
+                      lastChild={true}
+                      disableScrollLocking={true}
+                      defaultValue={application.endDate ? new Date(application.endDate) : undefined}
+                      renderNode={document.body}
+                      required
+                      onChange={(_, dateObject) => this.onChange('endDate', dateObject)}
+                      errorText={`this field is required`}
+                      formatOptions={FORMAT_OPTIONS}
+                      locales="en-US"
+                    />
+                  ) : (
+                    ''
+                  )}
                   <TextField
-                    id="floating-center-title"
+                    id="responsible"
                     className="md-cell md-cell--12"
                     label="Responsible"
                     lineDirection="left"
                     placeholder="Add responsible name"
-                    defaultValue={application.responsable || undefined}
+                    defaultValue={application.responsible || undefined}
                     required
                     onChange={value => this.onChange('responsible', value)}
                     errorText={`this field is required`}
@@ -142,14 +169,46 @@ class ApplicationDialog extends PureComponent {
                             searchPlaceholder="Search by Opening"
                             onChange={value => this.onChange('opening', value)}
                             menuItems={openings ? openings.map(opening => ({ value: opening.id, label: opening.jobTitle })) : []}
+                            disabled={!isCreate ? true : undefined}
                           />
                         </Fragment>
                       );
                     }}
                   </Query>
+                  {!isCreate ? (
+                    <SelectionControlGroup
+                      id="result-radios"
+                      name="result-radio"
+                      label="Result"
+                      type="radio"
+                      controls={radioControls}
+                      className="hrk-result-selection"
+                      labelClassName="md-text--secondary"
+                      inline={true}
+                      defaultValue={'AVERAGE'}
+                      onChange={value => this.onChange('result', value)}
+                    />
+                  ) : (
+                    ''
+                  )}
+                  {!isCreate ? (
+                    <TextField
+                      id="feedback"
+                      className="md-cell md-cell--12"
+                      label="Feedback"
+                      lineDirection="left"
+                      rows={3}
+                      placeholder="Add feedback here."
+                      defaultValue={application.feedback || undefined}
+                      required
+                      onChange={value => this.onChange('feedback', value)}
+                      errorText={`this field is required`}
+                    />
+                  ) : (
+                    ''
+                  )}
                 </div>
               </DialogContainer>
-              <Snackbar toasts={notifications} onDismiss={this.dismissToast} />
             </Fragment>
           )}
         </Mutation>
@@ -173,8 +232,16 @@ const QUERY = gql`
 `;
 
 const ADD_APPLICATION = gql`
-  mutation Application($data: ApplicationCreateInput!) {
+  mutation AddApplication($data: ApplicationCreateInput!) {
     createApplication(data: $data) {
+      id
+    }
+  }
+`;
+
+const UPDATE_APPLICATION = gql`
+  mutation UpdateApplication($data: ApplicationUpdateInput!, $where: ApplicationWhereUniqueInput!) {
+    updateApplication(data: $data, where: $where) {
       id
     }
   }

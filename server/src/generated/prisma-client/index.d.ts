@@ -323,8 +323,8 @@ export type ApplicationStepOrderByInput =
   | "completionDate_DESC"
   | "result_ASC"
   | "result_DESC"
-  | "responsable_ASC"
-  | "responsable_DESC";
+  | "responsible_ASC"
+  | "responsible_DESC";
 
 export type Status =
   | "AVAILABLE"
@@ -346,8 +346,8 @@ export type ApplicationOrderByInput =
   | "endDate_DESC"
   | "feedback_ASC"
   | "feedback_DESC"
-  | "responsable_ASC"
-  | "responsable_DESC"
+  | "responsible_ASC"
+  | "responsible_DESC"
   | "result_ASC"
   | "result_DESC";
 
@@ -665,7 +665,7 @@ export interface ApplicationStepUpdateWithoutApplicationDataInput {
   feedback?: Maybe<String>;
   completionDate?: Maybe<DateTimeInput>;
   result?: Maybe<Result>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
 }
 
 export interface ApplicationWhereInput {
@@ -713,20 +713,20 @@ export interface ApplicationWhereInput {
   feedback_not_starts_with?: Maybe<String>;
   feedback_ends_with?: Maybe<String>;
   feedback_not_ends_with?: Maybe<String>;
-  responsable?: Maybe<String>;
-  responsable_not?: Maybe<String>;
-  responsable_in?: Maybe<String[] | String>;
-  responsable_not_in?: Maybe<String[] | String>;
-  responsable_lt?: Maybe<String>;
-  responsable_lte?: Maybe<String>;
-  responsable_gt?: Maybe<String>;
-  responsable_gte?: Maybe<String>;
-  responsable_contains?: Maybe<String>;
-  responsable_not_contains?: Maybe<String>;
-  responsable_starts_with?: Maybe<String>;
-  responsable_not_starts_with?: Maybe<String>;
-  responsable_ends_with?: Maybe<String>;
-  responsable_not_ends_with?: Maybe<String>;
+  responsible?: Maybe<String>;
+  responsible_not?: Maybe<String>;
+  responsible_in?: Maybe<String[] | String>;
+  responsible_not_in?: Maybe<String[] | String>;
+  responsible_lt?: Maybe<String>;
+  responsible_lte?: Maybe<String>;
+  responsible_gt?: Maybe<String>;
+  responsible_gte?: Maybe<String>;
+  responsible_contains?: Maybe<String>;
+  responsible_not_contains?: Maybe<String>;
+  responsible_starts_with?: Maybe<String>;
+  responsible_not_starts_with?: Maybe<String>;
+  responsible_ends_with?: Maybe<String>;
+  responsible_not_ends_with?: Maybe<String>;
   result?: Maybe<Result>;
   result_not?: Maybe<Result>;
   result_in?: Maybe<Result[] | Result>;
@@ -800,7 +800,7 @@ export interface ApplicationStepCreateWithoutApplicationInput {
   feedback?: Maybe<String>;
   completionDate?: Maybe<DateTimeInput>;
   result?: Maybe<Result>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
 }
 
 export interface CandidateSubscriptionWhereInput {
@@ -846,7 +846,7 @@ export interface ApplicationUpdateInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   candidate?: Maybe<CandidateUpdateOneRequiredWithoutApplicationsInput>;
   opening?: Maybe<OpeningUpdateOneRequiredWithoutApplicationsInput>;
@@ -911,7 +911,7 @@ export interface ApplicationUpdateWithoutOpeningDataInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   candidate?: Maybe<CandidateUpdateOneRequiredWithoutApplicationsInput>;
   steps?: Maybe<ApplicationStepUpdateManyWithoutApplicationInput>;
@@ -1116,20 +1116,20 @@ export interface ApplicationScalarWhereInput {
   feedback_not_starts_with?: Maybe<String>;
   feedback_ends_with?: Maybe<String>;
   feedback_not_ends_with?: Maybe<String>;
-  responsable?: Maybe<String>;
-  responsable_not?: Maybe<String>;
-  responsable_in?: Maybe<String[] | String>;
-  responsable_not_in?: Maybe<String[] | String>;
-  responsable_lt?: Maybe<String>;
-  responsable_lte?: Maybe<String>;
-  responsable_gt?: Maybe<String>;
-  responsable_gte?: Maybe<String>;
-  responsable_contains?: Maybe<String>;
-  responsable_not_contains?: Maybe<String>;
-  responsable_starts_with?: Maybe<String>;
-  responsable_not_starts_with?: Maybe<String>;
-  responsable_ends_with?: Maybe<String>;
-  responsable_not_ends_with?: Maybe<String>;
+  responsible?: Maybe<String>;
+  responsible_not?: Maybe<String>;
+  responsible_in?: Maybe<String[] | String>;
+  responsible_not_in?: Maybe<String[] | String>;
+  responsible_lt?: Maybe<String>;
+  responsible_lte?: Maybe<String>;
+  responsible_gt?: Maybe<String>;
+  responsible_gte?: Maybe<String>;
+  responsible_contains?: Maybe<String>;
+  responsible_not_contains?: Maybe<String>;
+  responsible_starts_with?: Maybe<String>;
+  responsible_not_starts_with?: Maybe<String>;
+  responsible_ends_with?: Maybe<String>;
+  responsible_not_ends_with?: Maybe<String>;
   result?: Maybe<Result>;
   result_not?: Maybe<Result>;
   result_in?: Maybe<Result[] | Result>;
@@ -1147,7 +1147,7 @@ export interface ApplicationUpdateWithoutCandidateDataInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   opening?: Maybe<OpeningUpdateOneRequiredWithoutApplicationsInput>;
   steps?: Maybe<ApplicationStepUpdateManyWithoutApplicationInput>;
@@ -1163,7 +1163,7 @@ export interface ApplicationCreateInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   candidate: CandidateCreateOneWithoutApplicationsInput;
   opening: OpeningCreateOneWithoutApplicationsInput;
@@ -1261,20 +1261,20 @@ export interface ApplicationStepWhereInput {
   result_not?: Maybe<Result>;
   result_in?: Maybe<Result[] | Result>;
   result_not_in?: Maybe<Result[] | Result>;
-  responsable?: Maybe<String>;
-  responsable_not?: Maybe<String>;
-  responsable_in?: Maybe<String[] | String>;
-  responsable_not_in?: Maybe<String[] | String>;
-  responsable_lt?: Maybe<String>;
-  responsable_lte?: Maybe<String>;
-  responsable_gt?: Maybe<String>;
-  responsable_gte?: Maybe<String>;
-  responsable_contains?: Maybe<String>;
-  responsable_not_contains?: Maybe<String>;
-  responsable_starts_with?: Maybe<String>;
-  responsable_not_starts_with?: Maybe<String>;
-  responsable_ends_with?: Maybe<String>;
-  responsable_not_ends_with?: Maybe<String>;
+  responsible?: Maybe<String>;
+  responsible_not?: Maybe<String>;
+  responsible_in?: Maybe<String[] | String>;
+  responsible_not_in?: Maybe<String[] | String>;
+  responsible_lt?: Maybe<String>;
+  responsible_lte?: Maybe<String>;
+  responsible_gt?: Maybe<String>;
+  responsible_gte?: Maybe<String>;
+  responsible_contains?: Maybe<String>;
+  responsible_not_contains?: Maybe<String>;
+  responsible_starts_with?: Maybe<String>;
+  responsible_not_starts_with?: Maybe<String>;
+  responsible_ends_with?: Maybe<String>;
+  responsible_not_ends_with?: Maybe<String>;
   AND?: Maybe<ApplicationStepWhereInput[] | ApplicationStepWhereInput>;
   OR?: Maybe<ApplicationStepWhereInput[] | ApplicationStepWhereInput>;
   NOT?: Maybe<ApplicationStepWhereInput[] | ApplicationStepWhereInput>;
@@ -1409,20 +1409,20 @@ export interface ApplicationStepScalarWhereInput {
   result_not?: Maybe<Result>;
   result_in?: Maybe<Result[] | Result>;
   result_not_in?: Maybe<Result[] | Result>;
-  responsable?: Maybe<String>;
-  responsable_not?: Maybe<String>;
-  responsable_in?: Maybe<String[] | String>;
-  responsable_not_in?: Maybe<String[] | String>;
-  responsable_lt?: Maybe<String>;
-  responsable_lte?: Maybe<String>;
-  responsable_gt?: Maybe<String>;
-  responsable_gte?: Maybe<String>;
-  responsable_contains?: Maybe<String>;
-  responsable_not_contains?: Maybe<String>;
-  responsable_starts_with?: Maybe<String>;
-  responsable_not_starts_with?: Maybe<String>;
-  responsable_ends_with?: Maybe<String>;
-  responsable_not_ends_with?: Maybe<String>;
+  responsible?: Maybe<String>;
+  responsible_not?: Maybe<String>;
+  responsible_in?: Maybe<String[] | String>;
+  responsible_not_in?: Maybe<String[] | String>;
+  responsible_lt?: Maybe<String>;
+  responsible_lte?: Maybe<String>;
+  responsible_gt?: Maybe<String>;
+  responsible_gte?: Maybe<String>;
+  responsible_contains?: Maybe<String>;
+  responsible_not_contains?: Maybe<String>;
+  responsible_starts_with?: Maybe<String>;
+  responsible_not_starts_with?: Maybe<String>;
+  responsible_ends_with?: Maybe<String>;
+  responsible_not_ends_with?: Maybe<String>;
   AND?: Maybe<
     ApplicationStepScalarWhereInput[] | ApplicationStepScalarWhereInput
   >;
@@ -1479,14 +1479,14 @@ export interface ApplicationStepUpdateManyDataInput {
   feedback?: Maybe<String>;
   completionDate?: Maybe<DateTimeInput>;
   result?: Maybe<Result>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
 }
 
 export interface ApplicationUpdateManyDataInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
 }
 
@@ -1494,7 +1494,7 @@ export interface ApplicationUpdateManyMutationInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
 }
 
@@ -1509,7 +1509,7 @@ export interface ApplicationCreateWithoutCandidateInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   opening: OpeningCreateOneWithoutApplicationsInput;
   steps?: Maybe<ApplicationStepCreateManyWithoutApplicationInput>;
@@ -1552,7 +1552,7 @@ export interface ApplicationStepCreateInput {
   feedback?: Maybe<String>;
   completionDate?: Maybe<DateTimeInput>;
   result?: Maybe<Result>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
 }
 
 export interface TemplateStepUpdateInput {
@@ -1574,7 +1574,7 @@ export interface ApplicationCreateWithoutStepsInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   candidate: CandidateCreateOneWithoutApplicationsInput;
   opening: OpeningCreateOneWithoutApplicationsInput;
@@ -1599,7 +1599,7 @@ export interface ApplicationStepUpdateInput {
   feedback?: Maybe<String>;
   completionDate?: Maybe<DateTimeInput>;
   result?: Maybe<Result>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
 }
 
 export interface ApplicationStepSubscriptionWhereInput {
@@ -1626,7 +1626,7 @@ export interface ApplicationStepUpdateManyMutationInput {
   feedback?: Maybe<String>;
   completionDate?: Maybe<DateTimeInput>;
   result?: Maybe<Result>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
 }
 
 export interface ApplicationUpsertWithoutStepsInput {
@@ -1638,7 +1638,7 @@ export interface ApplicationUpdateWithoutStepsDataInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   candidate?: Maybe<CandidateUpdateOneRequiredWithoutApplicationsInput>;
   opening?: Maybe<OpeningUpdateOneRequiredWithoutApplicationsInput>;
@@ -1672,7 +1672,7 @@ export interface ApplicationCreateWithoutOpeningInput {
   startDate?: Maybe<DateTimeInput>;
   endDate?: Maybe<DateTimeInput>;
   feedback?: Maybe<String>;
-  responsable?: Maybe<String>;
+  responsible?: Maybe<String>;
   result?: Maybe<Result>;
   candidate: CandidateCreateOneWithoutApplicationsInput;
   steps?: Maybe<ApplicationStepCreateManyWithoutApplicationInput>;
@@ -2153,7 +2153,7 @@ export interface Application {
   startDate?: DateTimeOutput;
   endDate?: DateTimeOutput;
   feedback?: String;
-  responsable?: String;
+  responsible?: String;
   result?: Result;
 }
 
@@ -2162,7 +2162,7 @@ export interface ApplicationPromise extends Promise<Application>, Fragmentable {
   startDate: () => Promise<DateTimeOutput>;
   endDate: () => Promise<DateTimeOutput>;
   feedback: () => Promise<String>;
-  responsable: () => Promise<String>;
+  responsible: () => Promise<String>;
   result: () => Promise<Result>;
   candidate: <T = CandidatePromise>() => T;
   opening: <T = OpeningPromise>() => T;
@@ -2184,7 +2184,7 @@ export interface ApplicationSubscription
   startDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   endDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   feedback: () => Promise<AsyncIterator<String>>;
-  responsable: () => Promise<AsyncIterator<String>>;
+  responsible: () => Promise<AsyncIterator<String>>;
   result: () => Promise<AsyncIterator<Result>>;
   candidate: <T = CandidateSubscription>() => T;
   opening: <T = OpeningSubscription>() => T;
@@ -2206,7 +2206,7 @@ export interface ApplicationNullablePromise
   startDate: () => Promise<DateTimeOutput>;
   endDate: () => Promise<DateTimeOutput>;
   feedback: () => Promise<String>;
-  responsable: () => Promise<String>;
+  responsible: () => Promise<String>;
   result: () => Promise<Result>;
   candidate: <T = CandidatePromise>() => T;
   opening: <T = OpeningPromise>() => T;
@@ -2288,7 +2288,7 @@ export interface ApplicationPreviousValues {
   startDate?: DateTimeOutput;
   endDate?: DateTimeOutput;
   feedback?: String;
-  responsable?: String;
+  responsible?: String;
   result?: Result;
 }
 
@@ -2299,7 +2299,7 @@ export interface ApplicationPreviousValuesPromise
   startDate: () => Promise<DateTimeOutput>;
   endDate: () => Promise<DateTimeOutput>;
   feedback: () => Promise<String>;
-  responsable: () => Promise<String>;
+  responsible: () => Promise<String>;
   result: () => Promise<Result>;
 }
 
@@ -2310,7 +2310,7 @@ export interface ApplicationPreviousValuesSubscription
   startDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   endDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   feedback: () => Promise<AsyncIterator<String>>;
-  responsable: () => Promise<AsyncIterator<String>>;
+  responsible: () => Promise<AsyncIterator<String>>;
   result: () => Promise<AsyncIterator<Result>>;
 }
 
@@ -2335,7 +2335,7 @@ export interface ApplicationStep {
   feedback?: String;
   completionDate?: DateTimeOutput;
   result?: Result;
-  responsable?: String;
+  responsible?: String;
 }
 
 export interface ApplicationStepPromise
@@ -2347,7 +2347,7 @@ export interface ApplicationStepPromise
   feedback: () => Promise<String>;
   completionDate: () => Promise<DateTimeOutput>;
   result: () => Promise<Result>;
-  responsable: () => Promise<String>;
+  responsible: () => Promise<String>;
 }
 
 export interface ApplicationStepSubscription
@@ -2359,7 +2359,7 @@ export interface ApplicationStepSubscription
   feedback: () => Promise<AsyncIterator<String>>;
   completionDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   result: () => Promise<AsyncIterator<Result>>;
-  responsable: () => Promise<AsyncIterator<String>>;
+  responsible: () => Promise<AsyncIterator<String>>;
 }
 
 export interface ApplicationStepNullablePromise
@@ -2371,7 +2371,7 @@ export interface ApplicationStepNullablePromise
   feedback: () => Promise<String>;
   completionDate: () => Promise<DateTimeOutput>;
   result: () => Promise<Result>;
-  responsable: () => Promise<String>;
+  responsible: () => Promise<String>;
 }
 
 export interface Step {
@@ -2447,7 +2447,7 @@ export interface ApplicationStepPreviousValues {
   feedback?: String;
   completionDate?: DateTimeOutput;
   result?: Result;
-  responsable?: String;
+  responsible?: String;
 }
 
 export interface ApplicationStepPreviousValuesPromise
@@ -2457,7 +2457,7 @@ export interface ApplicationStepPreviousValuesPromise
   feedback: () => Promise<String>;
   completionDate: () => Promise<DateTimeOutput>;
   result: () => Promise<Result>;
-  responsable: () => Promise<String>;
+  responsible: () => Promise<String>;
 }
 
 export interface ApplicationStepPreviousValuesSubscription
@@ -2467,7 +2467,7 @@ export interface ApplicationStepPreviousValuesSubscription
   feedback: () => Promise<AsyncIterator<String>>;
   completionDate: () => Promise<AsyncIterator<DateTimeOutput>>;
   result: () => Promise<AsyncIterator<Result>>;
-  responsable: () => Promise<AsyncIterator<String>>;
+  responsible: () => Promise<AsyncIterator<String>>;
 }
 
 export interface AggregateStep {

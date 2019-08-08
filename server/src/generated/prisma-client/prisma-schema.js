@@ -32,7 +32,7 @@ type Application {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: Candidate!
   opening: Opening!
@@ -50,7 +50,7 @@ input ApplicationCreateInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: CandidateCreateOneWithoutApplicationsInput!
   opening: OpeningCreateOneWithoutApplicationsInput!
@@ -77,7 +77,7 @@ input ApplicationCreateWithoutCandidateInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   opening: OpeningCreateOneWithoutApplicationsInput!
   steps: ApplicationStepCreateManyWithoutApplicationInput
@@ -88,7 +88,7 @@ input ApplicationCreateWithoutOpeningInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: CandidateCreateOneWithoutApplicationsInput!
   steps: ApplicationStepCreateManyWithoutApplicationInput
@@ -99,7 +99,7 @@ input ApplicationCreateWithoutStepsInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: CandidateCreateOneWithoutApplicationsInput!
   opening: OpeningCreateOneWithoutApplicationsInput!
@@ -119,8 +119,8 @@ enum ApplicationOrderByInput {
   endDate_DESC
   feedback_ASC
   feedback_DESC
-  responsable_ASC
-  responsable_DESC
+  responsible_ASC
+  responsible_DESC
   result_ASC
   result_DESC
 }
@@ -130,7 +130,7 @@ type ApplicationPreviousValues {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
 }
 
@@ -179,20 +179,20 @@ input ApplicationScalarWhereInput {
   feedback_not_starts_with: String
   feedback_ends_with: String
   feedback_not_ends_with: String
-  responsable: String
-  responsable_not: String
-  responsable_in: [String!]
-  responsable_not_in: [String!]
-  responsable_lt: String
-  responsable_lte: String
-  responsable_gt: String
-  responsable_gte: String
-  responsable_contains: String
-  responsable_not_contains: String
-  responsable_starts_with: String
-  responsable_not_starts_with: String
-  responsable_ends_with: String
-  responsable_not_ends_with: String
+  responsible: String
+  responsible_not: String
+  responsible_in: [String!]
+  responsible_not_in: [String!]
+  responsible_lt: String
+  responsible_lte: String
+  responsible_gt: String
+  responsible_gte: String
+  responsible_contains: String
+  responsible_not_contains: String
+  responsible_starts_with: String
+  responsible_not_starts_with: String
+  responsible_ends_with: String
+  responsible_not_ends_with: String
   result: Result
   result_not: Result
   result_in: [Result!]
@@ -209,7 +209,7 @@ type ApplicationStep {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 type ApplicationStepConnection {
@@ -225,7 +225,7 @@ input ApplicationStepCreateInput {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 input ApplicationStepCreateManyWithoutApplicationInput {
@@ -239,7 +239,7 @@ input ApplicationStepCreateWithoutApplicationInput {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 type ApplicationStepEdge {
@@ -256,8 +256,8 @@ enum ApplicationStepOrderByInput {
   completionDate_DESC
   result_ASC
   result_DESC
-  responsable_ASC
-  responsable_DESC
+  responsible_ASC
+  responsible_DESC
 }
 
 type ApplicationStepPreviousValues {
@@ -265,7 +265,7 @@ type ApplicationStepPreviousValues {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 input ApplicationStepScalarWhereInput {
@@ -309,20 +309,20 @@ input ApplicationStepScalarWhereInput {
   result_not: Result
   result_in: [Result!]
   result_not_in: [Result!]
-  responsable: String
-  responsable_not: String
-  responsable_in: [String!]
-  responsable_not_in: [String!]
-  responsable_lt: String
-  responsable_lte: String
-  responsable_gt: String
-  responsable_gte: String
-  responsable_contains: String
-  responsable_not_contains: String
-  responsable_starts_with: String
-  responsable_not_starts_with: String
-  responsable_ends_with: String
-  responsable_not_ends_with: String
+  responsible: String
+  responsible_not: String
+  responsible_in: [String!]
+  responsible_not_in: [String!]
+  responsible_lt: String
+  responsible_lte: String
+  responsible_gt: String
+  responsible_gte: String
+  responsible_contains: String
+  responsible_not_contains: String
+  responsible_starts_with: String
+  responsible_not_starts_with: String
+  responsible_ends_with: String
+  responsible_not_ends_with: String
   AND: [ApplicationStepScalarWhereInput!]
   OR: [ApplicationStepScalarWhereInput!]
   NOT: [ApplicationStepScalarWhereInput!]
@@ -352,21 +352,21 @@ input ApplicationStepUpdateInput {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 input ApplicationStepUpdateManyDataInput {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 input ApplicationStepUpdateManyMutationInput {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 input ApplicationStepUpdateManyWithoutApplicationInput {
@@ -391,7 +391,7 @@ input ApplicationStepUpdateWithoutApplicationDataInput {
   feedback: String
   completionDate: DateTime
   result: Result
-  responsable: String
+  responsible: String
 }
 
 input ApplicationStepUpdateWithWhereUniqueWithoutApplicationInput {
@@ -448,20 +448,20 @@ input ApplicationStepWhereInput {
   result_not: Result
   result_in: [Result!]
   result_not_in: [Result!]
-  responsable: String
-  responsable_not: String
-  responsable_in: [String!]
-  responsable_not_in: [String!]
-  responsable_lt: String
-  responsable_lte: String
-  responsable_gt: String
-  responsable_gte: String
-  responsable_contains: String
-  responsable_not_contains: String
-  responsable_starts_with: String
-  responsable_not_starts_with: String
-  responsable_ends_with: String
-  responsable_not_ends_with: String
+  responsible: String
+  responsible_not: String
+  responsible_in: [String!]
+  responsible_not_in: [String!]
+  responsible_lt: String
+  responsible_lte: String
+  responsible_gt: String
+  responsible_gte: String
+  responsible_contains: String
+  responsible_not_contains: String
+  responsible_starts_with: String
+  responsible_not_starts_with: String
+  responsible_ends_with: String
+  responsible_not_ends_with: String
   AND: [ApplicationStepWhereInput!]
   OR: [ApplicationStepWhereInput!]
   NOT: [ApplicationStepWhereInput!]
@@ -493,7 +493,7 @@ input ApplicationUpdateInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: CandidateUpdateOneRequiredWithoutApplicationsInput
   opening: OpeningUpdateOneRequiredWithoutApplicationsInput
@@ -504,7 +504,7 @@ input ApplicationUpdateManyDataInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
 }
 
@@ -512,7 +512,7 @@ input ApplicationUpdateManyMutationInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
 }
 
@@ -558,7 +558,7 @@ input ApplicationUpdateWithoutCandidateDataInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   opening: OpeningUpdateOneRequiredWithoutApplicationsInput
   steps: ApplicationStepUpdateManyWithoutApplicationInput
@@ -568,7 +568,7 @@ input ApplicationUpdateWithoutOpeningDataInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: CandidateUpdateOneRequiredWithoutApplicationsInput
   steps: ApplicationStepUpdateManyWithoutApplicationInput
@@ -578,7 +578,7 @@ input ApplicationUpdateWithoutStepsDataInput {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: CandidateUpdateOneRequiredWithoutApplicationsInput
   opening: OpeningUpdateOneRequiredWithoutApplicationsInput
@@ -656,20 +656,20 @@ input ApplicationWhereInput {
   feedback_not_starts_with: String
   feedback_ends_with: String
   feedback_not_ends_with: String
-  responsable: String
-  responsable_not: String
-  responsable_in: [String!]
-  responsable_not_in: [String!]
-  responsable_lt: String
-  responsable_lte: String
-  responsable_gt: String
-  responsable_gte: String
-  responsable_contains: String
-  responsable_not_contains: String
-  responsable_starts_with: String
-  responsable_not_starts_with: String
-  responsable_ends_with: String
-  responsable_not_ends_with: String
+  responsible: String
+  responsible_not: String
+  responsible_in: [String!]
+  responsible_not_in: [String!]
+  responsible_lt: String
+  responsible_lte: String
+  responsible_gt: String
+  responsible_gte: String
+  responsible_contains: String
+  responsible_not_contains: String
+  responsible_starts_with: String
+  responsible_not_starts_with: String
+  responsible_ends_with: String
+  responsible_not_ends_with: String
   result: Result
   result_not: Result
   result_in: [Result!]

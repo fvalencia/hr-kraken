@@ -1,12 +1,7 @@
 module.exports = {
   createApplication(parent, { data }, context) {
-    console.log('Got here ---->', data);
-    const { candidate, opening, startDate, responsable } = data;
     return context.prisma.createApplication({
-      candidate,
-      opening,
-      startDate,
-      responsable,
+      ...data,
       steps: {
         create: [
           { step: { connect: { id: 1 } } },
@@ -17,14 +12,11 @@ module.exports = {
         ]
       }
     });
-  }
-  // deletePost(parent, { id }, context) {
-  //   return context.prisma.deletePost({ id })
-  // },
-  // publish(parent, { id }, context) {
-  //   return context.prisma.updatePost({
-  //     where: { id },
-  //     data: { published: true },
-  //   })
-  // },
+  },
+  deleteApplication(parent, { where }, context) {
+    return context.prisma.deleteApplication(where);
+  },
+  updateApplication(parent, args, context) {
+    return context.prisma.updateApplication(args);
+  },
 };
