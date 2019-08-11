@@ -71,7 +71,8 @@ class ApplicationDialog extends PureComponent {
 
   render() {
     const { visible, application } = this.state;
-    const { candidate, opening, startDate, responsible, result = 'AVERAGE', feedback, endDate } = application;
+    const { candidate, opening, startDate, responsible, feedback, endDate } = application;
+    const result = !application.result ? 'AVERAGE' : application.result;
     const isCreate = this.props.type === 'create';
     const disabled = !candidate || !opening || !startDate || !responsible || (!isCreate && (!feedback || !endDate));
     const title = isCreate ? 'Add' : 'Assess';
