@@ -1,0 +1,17 @@
+.application-dialog {
+  .md-dialog {
+    width: 500px;
+    // height: 500px;
+    .md-dialog-content {
+      height: 100%;
+    }
+  }
+}
+
+.action-menu .md-tile-content--left-icon {
+  padding-left: 16px;
+}
+
+.right {
+  justify-content: flex-end;
+}

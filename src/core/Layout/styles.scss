@@ -1,4 +1,7 @@
 .page-content {
     padding: 20px;
+    position: relative;
+    flex: 1;
+    max-width: calc(100vw - 256px);
     /* background-color: grey; */
 }

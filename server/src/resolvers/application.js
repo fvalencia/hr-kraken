@@ -6,6 +6,6 @@ module.exports = {
     return context.prisma.application({ id }).opening();
   },
   steps: ({ id }, args, context) => {
-    return context.prisma.application({ id }).steps();
+    return context.prisma.application({ id }).steps(args);
   }
 };
