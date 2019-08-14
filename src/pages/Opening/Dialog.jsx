@@ -1,8 +1,9 @@
 import { gql } from 'apollo-boost';
 import React, { PureComponent, Fragment } from 'react';
 import { Query } from 'react-apollo';
-import { DialogContainer, TextField } from 'react-md';
+import { Button, DialogContainer, FontIcon, List, ListItem, TextField } from 'react-md';
 import Select from '../../components/Select';
+import './Dialog.scss';
 
 class OpeningDialog extends PureComponent {
   state = { visible: false };
@@ -28,6 +29,7 @@ class OpeningDialog extends PureComponent {
     return (
       <div>
         <DialogContainer
+          className="opening-dialog"
           id="simple-list-dialog"
           focusOnMount={false}
           visible={visible}
@@ -62,13 +64,24 @@ class OpeningDialog extends PureComponent {
                     errorText={`this field is required`}
                   />
                   <Select
-                    defaultValue={opening.step || undefined}
+                    defaultValue={undefined}
                     label="Steps"
                     placeholder="Select a Step"
                     searchPlaceholder="Search by Steps"
                     onChange={value => this.onChange('step', value)}
                     menuItems={steps ? steps.map(step => ({ value: step.id, label: step.name })) : []}
                   />
+                  <List>
+                    {opening.steps.map(step => {
+                      return (
+                        <ListItem key={step.id} primaryText={step.name} renderChildrenOutside>
+                          <Button icon>
+                            <FontIcon>delete</FontIcon>
+                          </Button>
+                        </ListItem>
+                      );
+                    })}
+                  </List>
                 </Fragment>
                 //   jobDescription
                 //   company

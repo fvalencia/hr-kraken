@@ -14,7 +14,8 @@ class Opening extends Component {
       jobDescription: '',
       company: '',
       maxSalaryRange: '',
-      status: ''
+      status: '',
+      steps: []
     }
   };
   headers = ['Job Title', 'Job Description', 'Company', 'Max Salary Range', 'status'];
