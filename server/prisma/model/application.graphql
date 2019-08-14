@@ -3,9 +3,9 @@ type Application {
   startDate: DateTime
   endDate: DateTime
   feedback: String
-  responsable: String
+  responsible: String
   result: Result
   candidate: Candidate! @relation(link: INLINE)
   opening: Opening! @relation(link: INLINE)
-  steps: [ApplicationStep!]
+  steps: [ApplicationStep!] @relation(name: "ApplicationOnApplicationSteps", onDelete: CASCADE)
 }

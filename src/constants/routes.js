@@ -34,6 +34,12 @@ export const routes = [
     label: 'Openings',
     icon: 'send',
     to: '/openings'
+  },
+  {
+    key: 'applications',
+    label: 'Applications',
+    icon: 'done_all',
+    to: '/applications'
   }
   // If you need a divider or a subheader
   //   { key: 'divider', divider: true },
