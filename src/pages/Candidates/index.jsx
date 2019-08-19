@@ -22,6 +22,10 @@ class Candidates extends Component {
     this.setState({ newCandidateModalVisible: false });
   };
 
+  editCandidate = candidate => {
+    console.warn('Not Implemented yet. Edit Candidate ->', candidate.name);
+  };
+
   render() {
     const { newCandidateModalVisible } = this.state;
 
@@ -40,6 +44,7 @@ class Candidates extends Component {
               <LoadingIndicator isLoading={loading} />
               <CandidatesTable
                 candidates={data && data.candidates ? data.candidates : []}
+                editCandidate={this.editCandidate}
               />
               <NewCandidate
                 visible={newCandidateModalVisible}

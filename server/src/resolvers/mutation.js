@@ -22,7 +22,10 @@ module.exports = {
   createStep(parent, { data }, context) {
     return context.prisma.createStep(data);
   },
-  createCandidate(parent, { data }, context) {
+  createCandidate(_, { data }, context) {
     return context.prisma.createCandidate(data);
+  },
+  deleteCandidate(_, { where }, context) {
+    return context.prisma.deleteCandidate(where);
   }
 };
