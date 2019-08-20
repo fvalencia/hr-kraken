@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { Button } from 'react-md';
 
-import LoadingIndicator from '../../components/shared/LoadingIndicator';
+import Loading from '../../components/Loading';
 import ErrorIndicator from '../../components/shared/ErrorIndicator';
 import CandidatesTable from '../../components/Candidates/CandidatesTable';
 import UpsertCandidateModal from '../../components/Candidates/UpsertCandidateModal';
@@ -30,38 +30,43 @@ class Candidates extends Component {
     const { upsertCandidateModalVisible } = this.state;
 
     return (
-      <Query query={CANDIDATES_QUERY}>
-        {({ data, loading, error }) => {
-          if (error) {
-            return (
-              <ErrorIndicator errorMessage="An unexpected error occurred." />
-            );
-          }
+      <Fragment>
+        <h1 className="page-h1">Candidates</h1>
+        <Query query={CANDIDATES_QUERY}>
+          {({ data, loading, error }) => {
+            if (loading) {
+              return <Loading />;
+            }
 
-          return (
-            <Fragment>
-              <h1>Candidates</h1>
-              <LoadingIndicator isLoading={loading} />
-              <CandidatesTable
-                candidates={data && data.candidates ? data.candidates : []}
-                editCandidate={this.editCandidate}
-              />
-              <UpsertCandidateModal
-                visible={upsertCandidateModalVisible}
-                onHide={this.closeUpsertCandidateModal}
-              />
-              <Button
-                floating
-                primary
-                onClick={this.openUpsertCandidateModal}
-                className="bottom-right"
-              >
-                add
-              </Button>
-            </Fragment>
-          );
-        }}
-      </Query>
+            if (error) {
+              return (
+                <ErrorIndicator errorMessage="An unexpected error occurred." />
+              );
+            }
+
+            return (
+              <Fragment>
+                <CandidatesTable
+                  candidates={data && data.candidates ? data.candidates : []}
+                  editCandidate={this.editCandidate}
+                />
+                <UpsertCandidateModal
+                  visible={upsertCandidateModalVisible}
+                  onHide={this.closeUpsertCandidateModal}
+                />
+                <Button
+                  floating
+                  primary
+                  onClick={this.openUpsertCandidateModal}
+                  className="bottom-right"
+                >
+                  add
+                </Button>
+              </Fragment>
+            );
+          }}
+        </Query>
+      </Fragment>
     );
   }
 }

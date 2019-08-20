@@ -8,11 +8,13 @@ import {
   TableHeader,
   TableBody,
   TableRow,
-  TableColumn
+  TableColumn,
+  TextField
 } from 'react-md';
 
 import ColumnKebabMenu from '../shared/ColumnKebabMenu';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import Empty from '../../components/Empty';
 import UpsertCandidateModal from './UpsertCandidateModal';
 
 export default class CandidatesTable extends Component {
@@ -20,7 +22,8 @@ export default class CandidatesTable extends Component {
     alertVisible: false,
     candidateToDelete: null,
     upsertCandidateModalVisible: false,
-    candidateToEdit: null
+    candidateToEdit: null,
+    textSearch: ''
   };
 
   editCandidate = candidate => {
@@ -67,11 +70,16 @@ export default class CandidatesTable extends Component {
     console.warn('Delete candidate ERROR, show message', e);
   };
 
+  onTextChange = text => {
+    this.setState({ textSearch: text });
+  };
+
   render() {
     const {
       alertVisible,
       upsertCandidateModalVisible,
-      candidateToEdit
+      candidateToEdit,
+      textSearch
     } = this.state;
 
     const menuItems = [
@@ -87,54 +95,81 @@ export default class CandidatesTable extends Component {
       }
     ];
 
+    const candidatesFiltered = textSearch.length
+      ? this.props.candidates.filter(
+          c =>
+            c.name.toLowerCase().includes(textSearch.toLowerCase()) ||
+            c.title.toLowerCase().includes(textSearch.toLowerCase()) ||
+            c.email.toLowerCase().includes(textSearch.toLowerCase())
+        )
+      : this.props.candidates;
+
     return (
       <Fragment>
-        <DataTable plain>
-          <TableHeader>
-            <TableRow>
-              <TableColumn>Name</TableColumn>
-              <TableColumn>Title</TableColumn>
-              <TableColumn>Email</TableColumn>
-              <TableColumn>Status</TableColumn>
-              <TableColumn />
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {this.props.candidates.map(candidate => (
-              <TableRow key={candidate.id}>
-                <TableColumn>{candidate.name}</TableColumn>
-                <TableColumn>{candidate.title}</TableColumn>
-                <TableColumn>{candidate.email}</TableColumn>
-                <TableColumn>{candidate.status}</TableColumn>
-                <ColumnKebabMenu
-                  menuItems={menuItems.map(mi => ({
-                    ...mi,
-                    onClick: mi.onClick(candidate) // update each function with the correspondent candidate
-                  }))}
+        <div className="md-grid right">
+          <TextField
+            id="search-field"
+            leftIcon={<FontIcon>search</FontIcon>}
+            lineDirection="left"
+            placeholder="Search by Text"
+            className="md-cell md-cell--bottom"
+            onChange={this.onTextChange}
+          />
+        </div>
+        {candidatesFiltered.length ? (
+          <Fragment>
+            <DataTable plain>
+              <TableHeader>
+                <TableRow>
+                  <TableColumn>Name</TableColumn>
+                  <TableColumn>Title</TableColumn>
+                  <TableColumn>Email</TableColumn>
+                  <TableColumn>Status</TableColumn>
+                  <TableColumn />
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {candidatesFiltered.map(candidate => (
+                  <TableRow key={candidate.id}>
+                    <TableColumn>{candidate.name}</TableColumn>
+                    <TableColumn>{candidate.title}</TableColumn>
+                    <TableColumn>{candidate.email}</TableColumn>
+                    <TableColumn>{candidate.status}</TableColumn>
+                    <ColumnKebabMenu
+                      menuItems={menuItems.map(mi => ({
+                        ...mi,
+                        onClick: mi.onClick(candidate) // update each function with the correspondent candidate
+                      }))}
+                    />
+                  </TableRow>
+                ))}
+              </TableBody>
+            </DataTable>
+            <Mutation
+              mutation={DELETE_CANDIDATE}
+              onCompleted={this.deleteCandidateCompleted}
+              onError={this.deleteCandidateError}
+            >
+              {deleteCandidate => (
+                <ConfirmDialog
+                  visible={alertVisible}
+                  title="Alert"
+                  message="Do you want to delete this candidate?"
+                  onEvent={e => this.onAlertEvent(e, deleteCandidate)}
                 />
-              </TableRow>
-            ))}
-          </TableBody>
-        </DataTable>
-        <Mutation
-          mutation={DELETE_CANDIDATE}
-          onCompleted={this.deleteCandidateCompleted}
-          onError={this.deleteCandidateError}
-        >
-          {deleteCandidate => (
-            <ConfirmDialog
-              visible={alertVisible}
-              title="Alert"
-              message="Do you want to delete this candidate?"
-              onEvent={e => this.onAlertEvent(e, deleteCandidate)}
+              )}
+            </Mutation>
+            <UpsertCandidateModal
+              visible={upsertCandidateModalVisible}
+              onHide={this.closeUpsertCandidateModal}
+              candidate={candidateToEdit}
             />
-          )}
-        </Mutation>
-        <UpsertCandidateModal
-          visible={upsertCandidateModalVisible}
-          onHide={this.closeUpsertCandidateModal}
-          candidate={candidateToEdit}
-        />
+          </Fragment>
+        ) : (
+          <div>
+            <Empty>ups we didn't find any results</Empty>
+          </div>
+        )}
       </Fragment>
     );
   }
