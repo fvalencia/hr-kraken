@@ -20,6 +20,9 @@ export default class UpsertCandidateModal extends Component {
     toasts: []
   };
 
+  // ? Is there a way to pull these values from the ones defined in graphql?
+  seniorityLevels = ['JUNIOR', 'MIDDLE', 'SENIOR'];
+
   addToast = (text, action, autohide = true) => {
     this.setState(state => {
       const toasts = state.toasts.slice();
@@ -86,9 +89,6 @@ export default class UpsertCandidateModal extends Component {
   };
 
   render() {
-    // ? Is there a way to pull these values from the ones defined in graphql?
-    const SENIORITY = ['JUNIOR', 'MIDDLE', 'SENIOR'];
-
     const { visible, onHide } = this.props;
     const { toasts } = this.state;
 
@@ -177,9 +177,10 @@ export default class UpsertCandidateModal extends Component {
                 id="seniority"
                 label="Seniority"
                 placeholder="Middle"
-                menuItems={SENIORITY}
+                menuItems={this.seniorityLevels}
                 defaultValue={seniority ? seniority : undefined}
                 simplifiedMenu={true}
+                fullWidth={true}
                 onChange={value =>
                   this.updateCandidateField('seniority', value)
                 }
