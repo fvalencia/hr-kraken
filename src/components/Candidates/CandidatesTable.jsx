@@ -13,17 +13,27 @@ import {
 
 import ColumnKebabMenu from '../shared/ColumnKebabMenu';
 import ConfirmDialog from '../../components/ConfirmDialog';
+import UpsertCandidateModal from './UpsertCandidateModal';
 
 export default class CandidatesTable extends Component {
   state = {
     alertVisible: false,
-    candidateToDelete: null
+    candidateToDelete: null,
+    upsertCandidateModalVisible: false,
+    candidateToEdit: null
   };
 
   editCandidate = candidate => {
     return () => {
-      this.props.editCandidate(candidate);
+      this.setState({
+        candidateToEdit: candidate,
+        upsertCandidateModalVisible: true
+      });
     };
+  };
+
+  closeUpsertCandidateModal = () => {
+    this.setState({ upsertCandidateModalVisible: false });
   };
 
   deleteCandidate = candidate => {
@@ -47,8 +57,22 @@ export default class CandidatesTable extends Component {
     this.setState({ candidateToDelete: null, alertVisible: false });
   };
 
+  deleteCandidateCompleted = () => {
+    // TODO: show toast message and emit so the table re-fetch the data
+    console.warn('Delete candidate successfully, show message');
+  };
+
+  deleteCandidateError = e => {
+    // TODO: show toast message with the error OR prevent allowing to delete the candidate if has current applications
+    console.warn('Delete candidate ERROR, show message', e);
+  };
+
   render() {
-    const { alertVisible } = this.state;
+    const {
+      alertVisible,
+      upsertCandidateModalVisible,
+      candidateToEdit
+    } = this.state;
 
     const menuItems = [
       {
@@ -92,8 +116,11 @@ export default class CandidatesTable extends Component {
             ))}
           </TableBody>
         </DataTable>
-        {/*  onCompleted={refetch} */}
-        <Mutation mutation={DELETE_CANDIDATE}>
+        <Mutation
+          mutation={DELETE_CANDIDATE}
+          onCompleted={this.deleteCandidateCompleted}
+          onError={this.deleteCandidateError}
+        >
           {deleteCandidate => (
             <ConfirmDialog
               visible={alertVisible}
@@ -103,6 +130,11 @@ export default class CandidatesTable extends Component {
             />
           )}
         </Mutation>
+        <UpsertCandidateModal
+          visible={upsertCandidateModalVisible}
+          onHide={this.closeUpsertCandidateModal}
+          candidate={candidateToEdit}
+        />
       </Fragment>
     );
   }
@@ -117,6 +149,5 @@ const DELETE_CANDIDATE = gql`
 `;
 
 CandidatesTable.propTypes = {
-  candidates: PropTypes.array.isRequired,
-  editCandidate: PropTypes.func
+  candidates: PropTypes.array.isRequired
 };

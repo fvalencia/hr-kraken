@@ -5,7 +5,7 @@ import { gql } from 'apollo-boost';
 
 import { DialogContainer, TextField, SelectField, Snackbar } from 'react-md';
 
-export default class NewCandidate extends Component {
+export default class UpsertCandidateModal extends Component {
   state = {
     candidate: {
       name: null,
@@ -32,17 +32,47 @@ export default class NewCandidate extends Component {
     this.setState({ candidate: { ...this.state.candidate, [key]: value } });
   };
 
-  saveCandidate = addCandidateFn => {
+  saveCandidate = upsertCandidateFn => {
     const { candidate } = this.state;
-    candidate.status = 'AVAILABLE'; // * AVAILABLE on creation by default
+    let candidateToUpsert, where;
 
-    addCandidateFn({ variables: { candidateData: candidate } });
+    // Editing candidate
+    if (this.props.candidate) {
+      // clear keys with null values (as they haven't change with the form, they're null in the state)
+      for (const key in candidate) {
+        if (candidate.hasOwnProperty(key)) {
+          if (candidate[key] === null) {
+            delete candidate[key];
+          }
+        }
+      }
+
+      candidateToUpsert = { ...this.props.candidate, ...candidate };
+      where = { id: candidateToUpsert.id };
+
+      // Remove unaccepted props in candidate object to update
+      delete candidateToUpsert['__typename'];
+      delete candidateToUpsert['id'];
+    } else {
+      candidateToUpsert = candidate;
+      candidateToUpsert.status = 'AVAILABLE'; // * AVAILABLE on creation by default
+      where = { id: '' };
+    }
+
+    upsertCandidateFn({
+      variables: { where, create: candidateToUpsert, update: candidateToUpsert }
+    });
   };
 
   // * Can received data of new candidate added
-  addCandidateComplete = () => {
+  // TODO: emit something to the table re-fetch the data
+  upsertCandidateComplete = () => {
     this.props.onHide();
-    this.addToast('New Candidate Added Successfully!');
+    if (this.props.candidate) {
+      this.addToast('Candidate Updated Successfully!');
+    } else {
+      this.addToast('New Candidate Added Successfully!');
+    }
   };
 
   dismissToast = () => {
@@ -56,20 +86,38 @@ export default class NewCandidate extends Component {
   };
 
   render() {
-    const { visible, onHide } = this.props;
-    const { toasts, candidate } = this.state;
     // ? Is there a way to pull these values from the ones defined in graphql?
     const SENIORITY = ['JUNIOR', 'MIDDLE', 'SENIOR'];
-    const {name, email, title, seniority} = candidate;
+
+    const { visible, onHide } = this.props;
+    const { toasts } = this.state;
+
+    let modalTitle = 'New Candidate';
+    let { candidate } = this.state;
+    if (this.props.candidate) {
+      modalTitle = 'Edit Candidate';
+      candidate = this.props.candidate;
+    }
+    const {
+      name,
+      email,
+      phone,
+      skypeId,
+      title,
+      seniority,
+      yearsOfExperience,
+      salaryExpectation
+    } = candidate;
+    // TODO: disable conditionally save button when editing a candidate
     const saveButtonDisabled = !name || !email || !title || !seniority;
 
     return (
       <Mutation
-        mutation={ADD_CANDIDATE}
-        onCompleted={this.addCandidateComplete}
+        mutation={UPSERT_CANDIDATE}
+        onCompleted={this.upsertCandidateComplete}
         onError={this.showErrorOnCandidateCreation}
       >
-        {addCandidate => (
+        {upsertCandidate => (
           <Fragment>
             <DialogContainer
               id="new-candidate-dialog"
@@ -80,17 +128,18 @@ export default class NewCandidate extends Component {
                 {
                   secondary: false,
                   children: 'Save',
-                  onClick: () => this.saveCandidate(addCandidate),
+                  onClick: () => this.saveCandidate(upsertCandidate),
                   type: 'submit',
                   disabled: saveButtonDisabled
                 }
               ]}
-              title="New Candidate"
+              title={modalTitle}
             >
               <TextField
                 id="name"
                 label="Name"
                 placeholder="Full name..."
+                defaultValue={name}
                 onChange={value => this.updateCandidateField('name', value)}
                 required
               />
@@ -98,6 +147,7 @@ export default class NewCandidate extends Component {
                 id="email"
                 label="Email"
                 placeholder="example@email.com"
+                defaultValue={email}
                 onChange={value => this.updateCandidateField('email', value)}
                 required
               />
@@ -105,18 +155,21 @@ export default class NewCandidate extends Component {
                 id="phone"
                 label="Phone"
                 placeholder="+57 1234567890"
+                defaultValue={phone}
                 onChange={value => this.updateCandidateField('phone', value)}
               />
               <TextField
                 id="skype"
                 label="Skype ID"
                 placeholder="mySkype"
+                defaultValue={skypeId}
                 onChange={value => this.updateCandidateField('skypeId', value)}
               />
               <TextField
                 id="title"
                 label="Title"
                 placeholder="FrontEnd Engineer..."
+                defaultValue={title}
                 onChange={value => this.updateCandidateField('title', value)}
                 required
               />
@@ -125,6 +178,7 @@ export default class NewCandidate extends Component {
                 label="Seniority"
                 placeholder="Middle"
                 menuItems={SENIORITY}
+                defaultValue={seniority ? seniority : undefined}
                 simplifiedMenu={true}
                 onChange={value =>
                   this.updateCandidateField('seniority', value)
@@ -135,6 +189,7 @@ export default class NewCandidate extends Component {
                 id="years-of-experience"
                 label="Years of experience"
                 placeholder="3"
+                defaultValue={yearsOfExperience}
                 type="number"
                 onChange={value =>
                   this.updateCandidateField('yearsOfExperience', +value)
@@ -144,6 +199,7 @@ export default class NewCandidate extends Component {
                 id="salary-expectation"
                 label="Salary Expectation"
                 placeholder="3000000"
+                defaultValue={salaryExpectation}
                 type="number"
                 onChange={value =>
                   this.updateCandidateField('salaryExpectation', +value)
@@ -163,14 +219,19 @@ export default class NewCandidate extends Component {
   }
 }
 
-const ADD_CANDIDATE = gql`
-  mutation AddCandidate($candidateData: CandidateCreateInput!) {
-    createCandidate(data: $candidateData) {
+const UPSERT_CANDIDATE = gql`
+  mutation UpsertCandidate(
+    $where: CandidateWhereUniqueInput!
+    $create: CandidateCreateInput!
+    $update: CandidateUpdateInput!
+  ) {
+    upsertCandidate(where: $where, create: $create, update: $update) {
       id
     }
   }
 `;
 
-NewCandidate.propTypes = {
-  visible: PropTypes.bool.isRequired
+UpsertCandidateModal.propTypes = {
+  visible: PropTypes.bool.isRequired,
+  candidate: PropTypes.object
 };

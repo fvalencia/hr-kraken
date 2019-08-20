@@ -22,6 +22,9 @@ module.exports = {
   createStep(parent, { data }, context) {
     return context.prisma.createStep(data);
   },
+  upsertCandidate(_, { where, create, update }, context) {
+    return context.prisma.upsertCandidate({ where, create, update });
+  },
   createCandidate(_, { data }, context) {
     return context.prisma.createCandidate(data);
   },

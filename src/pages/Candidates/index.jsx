@@ -7,19 +7,19 @@ import { Button } from 'react-md';
 import LoadingIndicator from '../../components/shared/LoadingIndicator';
 import ErrorIndicator from '../../components/shared/ErrorIndicator';
 import CandidatesTable from '../../components/Candidates/CandidatesTable';
-import NewCandidate from '../../components/Candidates/NewCandidate';
+import UpsertCandidateModal from '../../components/Candidates/UpsertCandidateModal';
 
 class Candidates extends Component {
   state = {
-    newCandidateModalVisible: false
+    upsertCandidateModalVisible: false
   };
 
-  openNewCandidateModal = () => {
-    this.setState({ newCandidateModalVisible: true });
+  openUpsertCandidateModal = () => {
+    this.setState({ upsertCandidateModalVisible: true });
   };
 
-  closeNewCandidateModal = () => {
-    this.setState({ newCandidateModalVisible: false });
+  closeUpsertCandidateModal = () => {
+    this.setState({ upsertCandidateModalVisible: false });
   };
 
   editCandidate = candidate => {
@@ -27,7 +27,7 @@ class Candidates extends Component {
   };
 
   render() {
-    const { newCandidateModalVisible } = this.state;
+    const { upsertCandidateModalVisible } = this.state;
 
     return (
       <Query query={CANDIDATES_QUERY}>
@@ -46,14 +46,14 @@ class Candidates extends Component {
                 candidates={data && data.candidates ? data.candidates : []}
                 editCandidate={this.editCandidate}
               />
-              <NewCandidate
-                visible={newCandidateModalVisible}
-                onHide={this.closeNewCandidateModal}
+              <UpsertCandidateModal
+                visible={upsertCandidateModalVisible}
+                onHide={this.closeUpsertCandidateModal}
               />
               <Button
                 floating
                 primary
-                onClick={this.openNewCandidateModal}
+                onClick={this.openUpsertCandidateModal}
                 className="bottom-right"
               >
                 add
@@ -73,6 +73,11 @@ const CANDIDATES_QUERY = gql`
       name
       title
       email
+      yearsOfExperience
+      phone
+      skypeId
+      salaryExpectation
+      seniority
       status
     }
   }
