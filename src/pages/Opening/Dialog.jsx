@@ -6,14 +6,33 @@ import Select from '../../components/Select';
 import './Dialog.scss';
 
 class OpeningDialog extends PureComponent {
-  state = { visible: false };
+  emptyOpening = {
+    id: null,
+    jobTitle: '',
+    jobDescription: '',
+    company: '',
+    maxSalaryRange: '',
+    status: '',
+    steps: []
+  };
+  state = {
+    visible: false,
+    opening: this.emptyOpening
+  };
 
   show = () => {
-    this.setState({ visible: true });
+    const openingValue = this.props.opening;
+    this.setState({
+      visible: true,
+      opening: openingValue
+    });
   };
 
   hide = () => {
-    this.setState({ visible: false });
+    this.setState({
+      visible: false,
+      opening: this.emptyOpening
+    });
   };
 
   componentDidUpdate(prevProps) {
@@ -22,9 +41,17 @@ class OpeningDialog extends PureComponent {
     }
   }
 
+  selectStep(step) {
+    const currentOpening = this.state.opening;
+    currentOpening.steps.push(step);
+    this.setState({
+      opening: currentOpening
+    });
+  }
+
   render() {
-    const { visible } = this.state;
-    const opening = this.props.opening;
+    const visible = this.state.visible;
+    const opening = this.state.opening;
 
     return (
       <div>
@@ -68,11 +95,12 @@ class OpeningDialog extends PureComponent {
                     label="Steps"
                     placeholder="Select a Step"
                     searchPlaceholder="Search by Steps"
-                    onChange={value => this.onChange('step', value)}
+                    onChange={value => this.selectStep(value)}
                     menuItems={steps ? steps.map(step => ({ value: step.id, label: step.name })) : []}
                   />
                   <List>
-                    {opening.steps.map(step => {
+                    {opening.steps.map(stepId => {
+                      const step = steps.find(step => step.id === stepId);
                       return (
                         <ListItem key={step.id} primaryText={step.name} renderChildrenOutside>
                           <Button icon>

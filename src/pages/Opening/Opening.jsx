@@ -7,16 +7,17 @@ import OpeningDialog from './Dialog';
 
 class Opening extends Component {
   state = {
-    showOpeningDialog: false,
-    opening: {
-      id: null,
-      jobTitle: '',
-      jobDescription: '',
-      company: '',
-      maxSalaryRange: '',
-      status: '',
-      steps: []
-    }
+    showOpeningDialog: false
+  };
+
+  opening = {
+    id: null,
+    jobTitle: '',
+    jobDescription: '',
+    company: '',
+    maxSalaryRange: '',
+    status: '',
+    steps: []
   };
   headers = ['Job Title', 'Job Description', 'Company', 'Max Salary Range', 'status'];
   menuItems = [
@@ -39,7 +40,12 @@ class Opening extends Component {
   };
 
   onClickEdit = openingToEdit => {
-    this.setState({ opening: openingToEdit });
+    this.opening = openingToEdit;
+    this.showDialog();
+  };
+
+  onClickDelete = openingToEdit => {
+    this.opening = openingToEdit;
     this.showDialog();
   };
 
@@ -75,7 +81,7 @@ class Opening extends Component {
                         <MenuButtonColumn
                           icon
                           menuItems={this.menuItems.map(m =>
-                            m.key === 'edit'
+                            m.key === 'menuItem'
                               ? { ...m, onClick: () => this.onClickEdit(opening) }
                               : { ...m, onClick: () => this.onClickDelete(opening) }
                           )}
@@ -93,7 +99,7 @@ class Opening extends Component {
         </Query>
         <OpeningDialog
           showDialog={this.state.showOpeningDialog}
-          opening={this.state.opening}
+          opening={this.opening}
           // onCloseModal={this.onCloseModal}
           // application={application}
           // type={key}
