@@ -68,13 +68,16 @@ export default class UpsertCandidateModal extends Component {
   };
 
   // * Can received data of new candidate added
-  // TODO: emit something to the table re-fetch the data
   upsertCandidateComplete = () => {
     this.props.onHide();
     if (this.props.candidate) {
       this.addToast('Candidate Updated Successfully!');
     } else {
       this.addToast('New Candidate Added Successfully!');
+    }
+
+    if (this.props.afterUpsertSuccess) {
+      this.props.afterUpsertSuccess();
     }
   };
 
@@ -234,5 +237,6 @@ const UPSERT_CANDIDATE = gql`
 
 UpsertCandidateModal.propTypes = {
   visible: PropTypes.bool.isRequired,
-  candidate: PropTypes.object
+  candidate: PropTypes.object,
+  afterUpsertSuccess: PropTypes.func
 };

@@ -9,6 +9,7 @@ import ErrorIndicator from '../../components/shared/ErrorIndicator';
 import CandidatesTable from '../../components/Candidates/CandidatesTable';
 import UpsertCandidateModal from '../../components/Candidates/UpsertCandidateModal';
 
+// ? why on UPDATE candidate refetch not displaying loading indicator while on INSERT candidate refetch does
 class Candidates extends Component {
   state = {
     upsertCandidateModalVisible: false
@@ -33,7 +34,7 @@ class Candidates extends Component {
       <Fragment>
         <h1 className="page-h1">Candidates</h1>
         <Query query={CANDIDATES_QUERY}>
-          {({ data, loading, error }) => {
+          {({ data, loading, error, refetch }) => {
             if (loading) {
               return <Loading />;
             }
@@ -49,10 +50,12 @@ class Candidates extends Component {
                 <CandidatesTable
                   candidates={data && data.candidates ? data.candidates : []}
                   editCandidate={this.editCandidate}
+                  refetchFn={refetch}
                 />
                 <UpsertCandidateModal
                   visible={upsertCandidateModalVisible}
                   onHide={this.closeUpsertCandidateModal}
+                  afterUpsertSuccess={refetch}
                 />
                 <Button
                   floating

@@ -63,6 +63,7 @@ export default class CandidatesTable extends Component {
   deleteCandidateCompleted = () => {
     // TODO: show toast message and emit so the table re-fetch the data
     console.warn('Delete candidate successfully, show message');
+    this.props.refetchFn();
   };
 
   deleteCandidateError = e => {
@@ -163,6 +164,7 @@ export default class CandidatesTable extends Component {
               visible={upsertCandidateModalVisible}
               onHide={this.closeUpsertCandidateModal}
               candidate={candidateToEdit}
+              afterUpsertSuccess={this.props.refetchFn}
             />
           </Fragment>
         ) : (
@@ -184,5 +186,6 @@ const DELETE_CANDIDATE = gql`
 `;
 
 CandidatesTable.propTypes = {
-  candidates: PropTypes.array.isRequired
+  candidates: PropTypes.array.isRequired,
+  refetchFn: PropTypes.func
 };
