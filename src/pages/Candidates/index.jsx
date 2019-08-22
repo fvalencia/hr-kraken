@@ -23,10 +23,6 @@ class Candidates extends Component {
     this.setState({ upsertCandidateModalVisible: false });
   };
 
-  editCandidate = candidate => {
-    console.warn('Not Implemented yet. Edit Candidate ->', candidate.name);
-  };
-
   render() {
     const { upsertCandidateModalVisible } = this.state;
 
@@ -49,7 +45,6 @@ class Candidates extends Component {
               <Fragment>
                 <CandidatesTable
                   candidates={data && data.candidates ? data.candidates : []}
-                  editCandidate={this.editCandidate}
                   refetchFn={refetch}
                 />
                 <UpsertCandidateModal
