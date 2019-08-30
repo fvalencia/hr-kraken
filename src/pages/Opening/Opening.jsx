@@ -40,6 +40,7 @@ class Opening extends Component {
   };
 
   onClickEdit = openingToEdit => {
+    openingToEdit.steps = openingToEdit.steps.map(step => step.id);
     this.opening = openingToEdit;
     this.showDialog();
   };
@@ -81,7 +82,7 @@ class Opening extends Component {
                         <MenuButtonColumn
                           icon
                           menuItems={this.menuItems.map(m =>
-                            m.key === 'menuItem'
+                            m.key === 'edit'
                               ? { ...m, onClick: () => this.onClickEdit(opening) }
                               : { ...m, onClick: () => this.onClickDelete(opening) }
                           )}

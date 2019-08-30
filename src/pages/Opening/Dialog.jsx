@@ -52,6 +52,10 @@ class OpeningDialog extends PureComponent {
   render() {
     const visible = this.state.visible;
     const opening = this.state.opening;
+    const actions = [
+      { secondary: true, children: 'Cancel', onClick: this.hide, type: 'button' },
+      { secondary: false, children: buttonText, onClick: () => this.onSubmit(mutationFn), disabled, type: 'submit' }
+    ];
 
     return (
       <div>
@@ -59,6 +63,7 @@ class OpeningDialog extends PureComponent {
           className="opening-dialog"
           id="simple-list-dialog"
           focusOnMount={false}
+          actions={actions}
           visible={visible}
           title={opening.id ? 'Edit Opening' : 'New Opening'}
           onHide={this.hide}
