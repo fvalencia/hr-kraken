@@ -1,5 +1,8 @@
 .opening-dialog {
   .md-dialog {
     width: 45vw;
+    .md-dialog-content {
+      padding: 0 24px;
+    }
   }
 }

@@ -4,13 +4,15 @@ import { Query } from 'react-apollo';
 import { Button, DataTable, TableHeader, TableBody, TableRow, TableColumn, MenuButtonColumn, FontIcon } from 'react-md';
 import { withRouter } from 'react-router-dom';
 import OpeningDialog from './Dialog';
+import Loading from '../../components/Loading';
+import NumberFormat from 'react-number-format';
 
 class Opening extends Component {
   state = {
     showOpeningDialog: false
   };
 
-  opening = {
+  emptyOpening = {
     id: null,
     jobTitle: '',
     jobDescription: '',
@@ -19,6 +21,8 @@ class Opening extends Component {
     status: '',
     steps: []
   };
+
+  opening = this.emptyOpening;
   headers = ['Job Title', 'Job Description', 'Company', 'Max Salary Range', 'status'];
   menuItems = [
     {
@@ -35,8 +39,12 @@ class Opening extends Component {
   ];
 
   showDialog = () => {
-    const showDialogValue = this.state.showOpeningDialog;
-    this.setState({ showOpeningDialog: !showDialogValue });
+    this.setState({ showOpeningDialog: true });
+  };
+
+  hideDialog = () => {
+    this.setState({ showOpeningDialog: false });
+    this.opening = this.emptyOpening;
   };
 
   onClickEdit = openingToEdit => {
@@ -56,7 +64,7 @@ class Opening extends Component {
         <h1>Openings</h1>
         <Query query={openingsQuery}>
           {({ data, loading, error }) => {
-            if (loading) return <p>Loading…</p>;
+            if (loading) return <Loading />;
             if (error) return <p>Something went wrong</p>;
             const { openings } = data;
             return (
@@ -77,7 +85,9 @@ class Opening extends Component {
                         <TableColumn>{opening.jobTitle}</TableColumn>
                         <TableColumn>{opening.jobDescription}</TableColumn>
                         <TableColumn>{opening.company}</TableColumn>
-                        <TableColumn>{opening.maxSalaryRange}</TableColumn>
+                        <TableColumn>
+                          <NumberFormat value={opening.maxSalaryRange} displayType={'text'} thousandSeparator={true} prefix={'$'} />
+                        </TableColumn>
                         <TableColumn>{opening.status}</TableColumn>
                         <MenuButtonColumn
                           icon
@@ -101,6 +111,7 @@ class Opening extends Component {
         <OpeningDialog
           showDialog={this.state.showOpeningDialog}
           opening={this.opening}
+          hideModal={this.hideDialog}
           // onCloseModal={this.onCloseModal}
           // application={application}
           // type={key}
@@ -124,6 +135,10 @@ const openingsQuery = gql`
       maxSalaryRange
       status
       steps {
+        id
+        name
+      }
+      application {
         id
         name
       }

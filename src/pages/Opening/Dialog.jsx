@@ -3,22 +3,15 @@ import React, { PureComponent, Fragment } from 'react';
 import { Query } from 'react-apollo';
 import { Button, DialogContainer, FontIcon, List, ListItem, TextField } from 'react-md';
 import Select from '../../components/Select';
+import Loading from '../../components/Loading';
 import './Dialog.scss';
 
 class OpeningDialog extends PureComponent {
-  emptyOpening = {
-    id: null,
-    jobTitle: '',
-    jobDescription: '',
-    company: '',
-    maxSalaryRange: '',
-    status: '',
-    steps: []
-  };
   state = {
     visible: false,
-    opening: this.emptyOpening
+    opening: { id: null, jobTitle: '', jobDescription: '', company: '', maxSalaryRange: '', status: '', steps: [] }
   };
+  buttonText = 'save';
 
   show = () => {
     const openingValue = this.props.opening;
@@ -30,8 +23,7 @@ class OpeningDialog extends PureComponent {
 
   hide = () => {
     this.setState({
-      visible: false,
-      opening: this.emptyOpening
+      visible: false
     });
   };
 
@@ -49,12 +41,15 @@ class OpeningDialog extends PureComponent {
     });
   }
 
+  onSubmit() {}
+
   render() {
     const visible = this.state.visible;
     const opening = this.state.opening;
+    const disabled = true;
     const actions = [
-      { secondary: true, children: 'Cancel', onClick: this.hide, type: 'button' },
-      { secondary: false, children: buttonText, onClick: () => this.onSubmit(mutationFn), disabled, type: 'submit' }
+      { secondary: true, children: 'Cancel', onClick: this.props.hideModal, type: 'button' },
+      { secondary: false, children: this.buttonText, onClick: () => this.onSubmit(), disabled, type: 'submit' }
     ];
 
     return (
@@ -66,13 +61,13 @@ class OpeningDialog extends PureComponent {
           actions={actions}
           visible={visible}
           title={opening.id ? 'Edit Opening' : 'New Opening'}
-          onHide={this.hide}
+          onHide={this.props.hideModal}
         >
           <Query query={applicationAndStepsQuery}>
             {({ data, loading, error }) => {
-              if (loading) return <p>Loading…</p>;
+              if (loading) return <Loading />;
               if (error) return <p>Something went wrong</p>;
-              const { steps } = data;
+              const { steps, applications } = data;
               return (
                 <Fragment>
                   <TextField
@@ -92,6 +87,26 @@ class OpeningDialog extends PureComponent {
                     lineDirection="left"
                     placeholder="Add Job Description"
                     defaultValue={opening.jobDescription || undefined}
+                    required
+                    errorText={`this field is required`}
+                  />
+                  <TextField
+                    id="floating-center-title"
+                    className="md-cell md-cell--12"
+                    label="Company"
+                    lineDirection="left"
+                    placeholder="Add company name"
+                    defaultValue={opening.company || undefined}
+                    required
+                    errorText={`this field is required`}
+                  />
+                  <TextField
+                    id="floating-center-title"
+                    className="md-cell md-cell--12"
+                    label="Company"
+                    lineDirection="left"
+                    placeholder="Add Max Salary Range"
+                    defaultValue={opening.maxSalaryRange || undefined}
                     required
                     errorText={`this field is required`}
                   />
@@ -115,11 +130,15 @@ class OpeningDialog extends PureComponent {
                       );
                     })}
                   </List>
+                  <Select
+                    defaultValue={undefined}
+                    label="Applications"
+                    placeholder="Select a Application"
+                    searchPlaceholder="Search by Application"
+                    onChange={value => this.selectStep(value)}
+                    menuItems={applications ? applications.map(application => ({ value: application.id, label: application.name })) : []}
+                  />
                 </Fragment>
-                //   jobDescription
-                //   company
-                //   maxSalaryRange
-                //   status
               );
             }}
           </Query>
@@ -132,6 +151,10 @@ class OpeningDialog extends PureComponent {
 const applicationAndStepsQuery = gql`
   {
     steps {
+      id
+      name
+    }
+    application {
       id
       name
     }
