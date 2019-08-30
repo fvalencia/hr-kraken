@@ -19,4 +19,16 @@ module.exports = {
   updateApplication(parent, args, context) {
     return context.prisma.updateApplication(args);
   },
+  createStep(parent, { data }, context) {
+    return context.prisma.createStep(data);
+  },
+  upsertCandidate(_, { where, create, update }, context) {
+    return context.prisma.upsertCandidate({ where, create, update });
+  },
+  createCandidate(_, { data }, context) {
+    return context.prisma.createCandidate(data);
+  },
+  deleteCandidate(_, { where }, context) {
+    return context.prisma.deleteCandidate(where);
+  }
 };
