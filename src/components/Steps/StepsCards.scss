@@ -1,0 +1,41 @@
+.steps-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  padding: 15px 0;
+}
+
+.step-card {
+  margin-bottom: 16px;
+  width: 15%;
+
+  .md-card-title {
+    justify-content: center;
+    padding: 16px 16px 8px 16px;
+
+    i {
+      font-size: 3.5em;
+    }
+  }
+
+  .md-card-text {
+    padding: 8px 16px 8px 16px;
+    text-align: center;
+
+    h4 {
+      margin: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .md-card-actions {
+    justify-content: center;
+  }
+}
+
+// TODO: improve
+.warning {
+  color: red;
+}
