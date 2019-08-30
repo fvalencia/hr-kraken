@@ -1,7 +1,12 @@
 .page-content {
-    padding: 20px;
-    position: relative;
-    flex: 1;
-    max-width: calc(100vw - 256px);
-    /* background-color: grey; */
+  padding: 20px;
+  position: relative;
+  flex: 1;
+  max-width: calc(100vw - 256px);
+}
+
+.bottom-right {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
 }

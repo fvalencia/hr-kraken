@@ -9,25 +9,8 @@ export const routes = [
   {
     key: 'candidates',
     label: 'Candidates',
-    icon: 'star',
-    to: '/candidates',
-    routes: [
-      {
-        key: 'a',
-        label: 'Candidates A',
-        to: '/candidates/a'
-      },
-      {
-        key: 'b',
-        label: 'Candidates B',
-        to: '/candidates/b'
-      },
-      {
-        key: 'c',
-        label: 'Candidates C',
-        to: '/candidates/c'
-      }
-    ]
+    icon: 'person',
+    to: '/candidates'
   },
   {
     key: 'openings',
