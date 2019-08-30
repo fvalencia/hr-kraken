@@ -12,9 +12,6 @@ class RouteSwitch extends Component {
         <Route exact path="/" component={Home} />
         <Route exact path="/applications" component={Application} />
         <Route exact path="/candidates" component={Candidates} />
-        {/* <Route path="/drafts" component={DraftsPage} />
-        <Route path="/create" component={CreatePage} />
-        <Route path="/post/:id" component={DetailPage} /> */}
       </Switch>
     );
   }

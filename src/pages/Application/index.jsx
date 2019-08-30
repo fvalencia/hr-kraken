@@ -158,7 +158,7 @@ class Application extends Component {
                     </TableHeader>
                     <TableBody>
                       {applications.map(application => {
-                        const { id, startDate, endDate, feedback, responsible, candidate, opening, result } = application;
+                        const { id, startDate, endDate, responsible, candidate, opening, result } = application;
                         return (
                           <TableRow key={id} selectable={false}>
                             <TableColumn>{startDate ? <Moment format={DATE_FORMAT} date={startDate} /> : ''}</TableColumn>
