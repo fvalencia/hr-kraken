@@ -1,12 +1,11 @@
 .steps-container {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-around;
   padding: 15px 0;
 }
 
 .step-card {
+  display: inline-block;
   margin-bottom: 16px;
+  margin-right: 16px;
   width: 15%;
 
   .md-card-title {
@@ -33,9 +32,4 @@
   .md-card-actions {
     justify-content: center;
   }
-}
-
-// TODO: improve
-.warning {
-  color: red;
 }

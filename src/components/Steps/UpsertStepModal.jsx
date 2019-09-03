@@ -2,14 +2,15 @@ import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
-
 import { DialogContainer, TextField, Snackbar } from 'react-md';
+
+import IconSelector from '../../components/shared/IconSelector';
 
 export default class UpsertStepModal extends Component {
   state = {
     step: {
-      name: null
-      // icon: null
+      name: null,
+      icon: null
     },
     toasts: []
   };
@@ -91,12 +92,9 @@ export default class UpsertStepModal extends Component {
       modalTitle = 'Edit Step';
       step = this.props.step;
     }
-    const {
-      name
-      // icon
-    } = step;
+    const { name, icon } = step;
     // TODO: disable conditionally save button when editing a step
-    const saveButtonDisabled = !name; // || !icon;
+    const saveButtonDisabled = !name || !icon;
 
     return (
       <Mutation
@@ -130,7 +128,10 @@ export default class UpsertStepModal extends Component {
                 onChange={value => this.updateStepField('name', value)}
                 required
               />
-              {/* TODO: Custom select with icons list */}
+              <IconSelector
+                selectedIcon={icon}
+                onChange={value => this.updateStepField('icon', value)}
+              ></IconSelector>
             </DialogContainer>
             <Snackbar
               id="error-message"

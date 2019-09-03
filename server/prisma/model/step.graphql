@@ -1,4 +1,5 @@
 type Step {
   id: ID! @id
   name: String!
+  icon: String!
 }

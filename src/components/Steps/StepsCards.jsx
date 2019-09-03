@@ -107,7 +107,7 @@ export default class StepsCards extends Component {
               {stepsFiltered.map(step => (
                 <Card className="step-card" key={step.id}>
                   <CardTitle title="">
-                    <FontIcon>home</FontIcon>
+                    <FontIcon>{step.icon}</FontIcon>
                   </CardTitle>
                   <CardText>
                     <h4>{step.name}</h4>
@@ -116,11 +116,7 @@ export default class StepsCards extends Component {
                     <Button icon primary onClick={this.editStep(step)}>
                       edit
                     </Button>
-                    <Button
-                      icon
-                      className="warning"
-                      onClick={this.deleteStep(step)}
-                    >
+                    <Button icon secondary onClick={this.deleteStep(step)}>
                       delete_forever
                     </Button>
                   </CardActions>

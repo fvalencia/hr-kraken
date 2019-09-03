@@ -73,6 +73,7 @@ const STEPS_QUERY = gql`
     steps {
       id
       name
+      icon
     }
   }
 `;
