@@ -1,6 +1,6 @@
 import { gql } from 'apollo-boost';
 import React, { Component, Fragment } from 'react';
-import { Query } from 'react-apollo';
+import { Mutation, Query } from 'react-apollo';
 import { Button, DataTable, TableHeader, TableBody, TableRow, TableColumn, MenuButtonColumn, FontIcon } from 'react-md';
 import { withRouter } from 'react-router-dom';
 import OpeningDialog from './Dialog';
@@ -62,7 +62,7 @@ class Opening extends Component {
     return (
       <Fragment>
         <h1>Openings</h1>
-        <Query query={openingsQuery}>
+        <Query query={OPENING_QUERY}>
           {({ data, loading, error }) => {
             if (loading) return <Loading />;
             if (error) return <p>Something went wrong</p>;
@@ -108,15 +108,17 @@ class Opening extends Component {
             );
           }}
         </Query>
+        {/* <Mutation mutation={!this.opening.id ? ADD_OPENING : UPDATE_OPENING} onCompleted={() => this.hideDialog()}> */}
         <OpeningDialog
           showDialog={this.state.showOpeningDialog}
           opening={this.opening}
           hideModal={this.hideDialog}
           // onCloseModal={this.onCloseModal}
-          // application={application}
+          // onClick={() => this.saveOpening(opening)}
           // type={key}
           // key={key}
         />
+        {/* </Mutation> */}
         <Button floating primary onClick={this.showDialog}>
           <FontIcon>add</FontIcon>
         </Button>
@@ -125,7 +127,7 @@ class Opening extends Component {
   }
 }
 
-const openingsQuery = gql`
+const OPENING_QUERY = gql`
   {
     openings {
       id
@@ -134,14 +136,22 @@ const openingsQuery = gql`
       company
       maxSalaryRange
       status
-      steps {
-        id
-        name
-      }
-      application {
-        id
-        name
-      }
+    }
+  }
+`;
+
+const ADD_OPENING = gql`
+  mutation AddOpening($data: OpeningCreateInput!) {
+    createOpening(data: $data) {
+      id
+    }
+  }
+`;
+
+const UPDATE_OPENING = gql`
+  mutation UpdateOpening($data: OpeningCreateInput!, $where: OpeningWhereUniqueInput!) {
+    updateOpening(data: $data, where: $where) {
+      id
     }
   }
 `;
