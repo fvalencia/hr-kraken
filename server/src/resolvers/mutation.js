@@ -33,5 +33,11 @@ module.exports = {
   },
   deleteCandidate(_, { where }, context) {
     return context.prisma.deleteCandidate(where);
+  },
+  upsertTemplateStep(_, { where, create, update }, context) {
+    return context.prisma.upsertTemplateStep({ where, create, update });
+  },
+  deleteTemplateStep(_, { where }, context) {
+    return context.prisma.deleteTemplateStep(where);
   }
 };
