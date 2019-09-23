@@ -4,8 +4,9 @@ import { Mutation } from 'react-apollo';
 import { gql } from 'apollo-boost';
 import CSSTransitionGroup from 'react-transition-group/CSSTransitionGroup';
 import { DialogContainer, TextField, Snackbar, Autocomplete } from 'react-md';
-
 import StepChip from './StepChip';
+
+import './UpsertTemplateModal.scss';
 
 const getInitialState = () => ({
   template: {
@@ -194,6 +195,7 @@ export default class UpsertTemplateModal extends Component {
                 onChange={value => this.updateTemplateField('name', value)}
                 required
               />
+              { stepsChips.length > 0 && <h4 className="selected-steps-title">Selected Steps</h4>}
               <CSSTransitionGroup
                 component="div"
                 transitionName="opacity"

@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Chip, FontIcon } from 'react-md';
+import { Chip, FontIcon, Avatar } from 'react-md';
+
+import './StepChip.scss';
 
 const StepChip = ({ step, removeStep, ...props }) => {
   const handleRemove = () => {
@@ -11,7 +13,7 @@ const StepChip = ({ step, removeStep, ...props }) => {
     <Chip
       {...props}
       label={step.name}
-      avatar={<FontIcon>{step.icon}</FontIcon>}
+      avatar={<Avatar icon={<FontIcon>{step.icon}</FontIcon>} suffix="pink"/>}
       onClick={handleRemove}
       removable
     />
