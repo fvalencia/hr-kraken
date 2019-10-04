@@ -108,17 +108,19 @@ class Opening extends Component {
             );
           }}
         </Query>
-        {/* <Mutation mutation={!this.opening.id ? ADD_OPENING : UPDATE_OPENING} onCompleted={() => this.hideDialog()}> */}
-        <OpeningDialog
-          showDialog={this.state.showOpeningDialog}
-          opening={this.opening}
-          hideModal={this.hideDialog}
-          // onCloseModal={this.onCloseModal}
-          // onClick={() => this.saveOpening(opening)}
-          // type={key}
-          // key={key}
-        />
-        {/* </Mutation> */}
+        <Mutation mutation={!this.opening.id ? ADD_OPENING : UPDATE_OPENING} onCompleted={() => this.hideDialog()}>
+          {createUpdateOpening => (
+            <OpeningDialog
+              showDialog={this.state.showOpeningDialog}
+              opening={this.opening}
+              hideModal={this.hideDialog}
+              // onCloseModal={this.onCloseModal}
+              createUpdateMutation={createUpdateOpening}
+              // type={key}
+              // key={key}
+            />
+          )}
+        </Mutation>
         <Button floating primary onClick={this.showDialog}>
           <FontIcon>add</FontIcon>
         </Button>

@@ -67,7 +67,17 @@ class OpeningDialog extends PureComponent {
     this.setState({ opening: { ...this.state.opening, [field]: value } });
   };
 
-  onSubmit() {}
+  onSubmit = createUpdateOpeningFn => {
+    const opening = this.state.opening;
+    const where = !isCreate ? { id } : undefined;
+
+    createUpdateOpeningFn({
+      variables: {
+        data,
+        where
+      }
+    });
+  };
 
   render() {
     const visible = this.state.visible;
@@ -75,7 +85,13 @@ class OpeningDialog extends PureComponent {
     const disabled = this.validateFields();
     const actions = [
       { secondary: true, children: 'Cancel', onClick: this.props.hideModal, type: 'button' },
-      { secondary: false, children: this.buttonText, onClick: () => this.onSubmit(), disabled, type: 'submit' }
+      {
+        secondary: false,
+        children: this.buttonText,
+        onClick: () => this.onSubmit(this.props.createUpdateMutation),
+        disabled,
+        type: 'submit'
+      }
     ];
 
     return (
