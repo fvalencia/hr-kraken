@@ -1,8 +1,12 @@
 .opening-dialog {
   .md-dialog {
     width: 45vw;
+    min-height: 300px;
     .md-dialog-content {
       padding: 0 24px;
     }
   }
+}
+.loading-container {
+  min-height: 300px;
 }

@@ -48,18 +48,20 @@ class OpeningDialog extends PureComponent {
   };
 
   selectStep = step => {
-    const currentOpening = this.state.opening;
-    currentOpening.steps.push(step);
     this.setState({
-      opening: currentOpening
+      opening: {
+        ...this.state.opening,
+        steps: [...this.state.opening.steps, step]
+      }
     });
   };
 
   selectApplication = application => {
-    const currentOpening = this.state.opening;
-    currentOpening.applications.push(application);
     this.setState({
-      opening: currentOpening
+      opening: {
+        ...this.state.opening,
+        applications: [...this.state.opening.applications, application]
+      }
     });
   };
 
@@ -68,12 +70,26 @@ class OpeningDialog extends PureComponent {
   };
 
   onSubmit = createUpdateOpeningFn => {
-    const opening = this.state.opening;
-    const where = !isCreate ? { id } : undefined;
+    let opening = this.state.opening;
+    const where = opening.id ? { id: opening.id } : undefined;
+
+    // deletes not allowed properties
+    delete opening['__typename'];
+    delete opening['id'];
+
+    // prepares data according to the model
+    opening = {
+      ...opening,
+      maxSalaryRange: parseFloat(opening.maxSalaryRange),
+      applications: opening.applications.length
+        ? { connect: opening.applications.map(applicationId => ({ id: applicationId })) }
+        : undefined,
+      steps: opening.steps.length ? { connect: opening.steps.map(openingId => ({ id: openingId })) } : undefined
+    };
 
     createUpdateOpeningFn({
       variables: {
-        data,
+        data: opening,
         where
       }
     });
@@ -81,7 +97,7 @@ class OpeningDialog extends PureComponent {
 
   render() {
     const visible = this.state.visible;
-    const opening = this.state.opening;
+    let opening = this.state.opening;
     const disabled = this.validateFields();
     const actions = [
       { secondary: true, children: 'Cancel', onClick: this.props.hideModal, type: 'button' },
@@ -95,7 +111,7 @@ class OpeningDialog extends PureComponent {
     ];
 
     return (
-      <div>
+      <div className="opening-dialog-container">
         <DialogContainer
           className="opening-dialog"
           id="simple-list-dialog"
@@ -107,9 +123,19 @@ class OpeningDialog extends PureComponent {
         >
           <Query query={applicationAndStepsQuery}>
             {({ data, loading, error }) => {
-              if (loading) return <Loading />;
+              if (loading)
+                return (
+                  <div className="loading-container">
+                    <Loading />
+                  </div>
+                );
               if (error) return <p>Something went wrong</p>;
               const { steps, applications } = data;
+              const filteredSteps = steps.filter(step => opening.steps.every(opStepId => opStepId !== step.id));
+              const filteredApplications = applications.filter(application =>
+                opening.applications.every(opAppId => opAppId !== application.id)
+              );
+              this.isLoading = false;
               return (
                 <Fragment>
                   <TextField
@@ -147,7 +173,7 @@ class OpeningDialog extends PureComponent {
                   <TextField
                     id="floating-center-title"
                     className="md-cell md-cell--12"
-                    label="Company"
+                    label="Max Salary Range"
                     lineDirection="left"
                     placeholder="Add Max Salary Range"
                     defaultValue={opening.maxSalaryRange || undefined}
@@ -158,51 +184,67 @@ class OpeningDialog extends PureComponent {
                   <Select
                     defaultValue={undefined}
                     label="Steps"
+                    required={false}
                     placeholder="Select a Step"
                     searchPlaceholder="Search by Steps"
                     onChange={value => this.selectStep(value)}
-                    menuItems={steps ? steps.map(step => ({ value: step.id, label: step.name })) : []}
+                    menuItems={
+                      filteredSteps && filteredSteps.length ? filteredSteps.map(step => ({ value: step.id, label: step.name })) : []
+                    }
                   />
                   <List>
                     {opening.steps.map(stepId => {
                       const step = steps.find(step => step.id === stepId);
-                      return (
+                      return step ? (
                         <ListItem key={step.id} primaryText={step.name} renderChildrenOutside>
                           <Button icon>
                             <FontIcon>delete</FontIcon>
                           </Button>
                         </ListItem>
+                      ) : (
+                        ''
                       );
                     })}
                   </List>
+                  {opening.id ? (
+                    <Fragment>
+                      <Select
+                        defaultValue={undefined}
+                        label="Applications"
+                        required={false}
+                        placeholder="Select an Application Candidate"
+                        searchPlaceholder="Search by Application Candidate"
+                        onChange={value => this.selectApplication(value)}
+                        menuItems={
+                          filteredApplications && filteredApplications.length
+                            ? filteredApplications.map(application => ({ value: application.id, label: application.candidate.name }))
+                            : []
+                        }
+                      />
+                      <List>
+                        {opening.applications.map(applicationId => {
+                          const application = applications.find(application => application.id === applicationId);
+                          return application ? (
+                            <ListItem key={application.id} primaryText={application.candidate.name} renderChildrenOutside>
+                              <Button icon>
+                                <FontIcon>delete</FontIcon>
+                              </Button>
+                            </ListItem>
+                          ) : (
+                            ''
+                          );
+                        })}
+                      </List>
+                    </Fragment>
+                  ) : (
+                    ''
+                  )}
                   <Select
-                    defaultValue={undefined}
-                    label="Applications"
-                    placeholder="Select an Application Candidate"
-                    searchPlaceholder="Search by Application Candidate"
-                    onChange={value => this.selectApplication(value)}
-                    menuItems={
-                      applications ? applications.map(application => ({ value: application.id, label: application.candidate })) : []
-                    }
-                  />
-                  <List>
-                    {opening.applications.map(applicationId => {
-                      const application = applications.find(application => application.id === applicationId);
-                      return (
-                        <ListItem key={application.id} primaryText={application.candidate} renderChildrenOutside>
-                          <Button icon>
-                            <FontIcon>delete</FontIcon>
-                          </Button>
-                        </ListItem>
-                      );
-                    })}
-                  </List>
-                  <Select
-                    defaultValue={undefined}
+                    defaultValue={opening.status}
                     label="Opening Status"
                     placeholder="Select a Status"
                     onChange={value => this.updateOpeningField('status', value)}
-                    menuItems={applications ? applications.map(application => ({ value: application.id, label: application.name })) : []}
+                    menuItems={this.openingStatus.map(status => ({ value: status, label: status }))}
                   />
                 </Fragment>
               );
@@ -222,7 +264,9 @@ const applicationAndStepsQuery = gql`
     }
     applications {
       id
-      startDate
+      candidate {
+        name
+      }
     }
   }
 `;

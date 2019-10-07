@@ -19,7 +19,8 @@ class Opening extends Component {
     company: '',
     maxSalaryRange: '',
     status: '',
-    steps: []
+    steps: [],
+    applications: []
   };
 
   opening = this.emptyOpening;
@@ -49,6 +50,7 @@ class Opening extends Component {
 
   onClickEdit = openingToEdit => {
     openingToEdit.steps = openingToEdit.steps.map(step => step.id);
+    openingToEdit.applications = openingToEdit.applications.map(application => application.id);
     this.opening = openingToEdit;
     this.showDialog();
   };
@@ -138,6 +140,12 @@ const OPENING_QUERY = gql`
       company
       maxSalaryRange
       status
+      steps {
+        id
+      }
+      applications {
+        id
+      }
     }
   }
 `;
@@ -151,7 +159,7 @@ const ADD_OPENING = gql`
 `;
 
 const UPDATE_OPENING = gql`
-  mutation UpdateOpening($data: OpeningCreateInput!, $where: OpeningWhereUniqueInput!) {
+  mutation UpdateOpening($data: OpeningUpdateInput!, $where: OpeningWhereUniqueInput!) {
     updateOpening(data: $data, where: $where) {
       id
     }
