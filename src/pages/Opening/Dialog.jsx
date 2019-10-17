@@ -13,10 +13,10 @@ class OpeningDialog extends PureComponent {
   };
   buttonText = 'save';
   // TODO: Fetch these values from DB
-  openingStatus = ['OPEN', 'CLOSED', 'PAUSED'];
+  openingStatus = ['OPEN', 'CLOSED'];
 
   show = () => {
-    const openingValue = this.props.opening;
+    const openingValue = this.props.openingToEdit;
     this.setState({
       visible: true,
       opening: openingValue
@@ -56,11 +56,31 @@ class OpeningDialog extends PureComponent {
     });
   };
 
+  deleteStep = step => {
+    const steps = this.state.opening.steps.filter(openingStep => openingStep !== step);
+    this.setState({
+      opening: {
+        ...this.state.opening,
+        steps
+      }
+    });
+  };
+
   selectApplication = application => {
     this.setState({
       opening: {
         ...this.state.opening,
         applications: [...this.state.opening.applications, application]
+      }
+    });
+  };
+
+  deleteApplication = application => {
+    const applications = this.state.opening.applications.filter(openingApp => openingApp !== application);
+    this.setState({
+      opening: {
+        ...this.state.opening,
+        applications
       }
     });
   };
@@ -78,13 +98,27 @@ class OpeningDialog extends PureComponent {
     delete opening['id'];
 
     // prepares data according to the model
+    const steps = opening.steps.length ? { connect: opening.steps.map(openingId => ({ id: openingId })) } : undefined;
+    const stepsToRemove = this.props.openingToEdit.steps.reduce((acc, step) => {
+      if (opening.steps.indexOf(step) < 0) {
+        acc.push({ id: step });
+      }
+      return acc;
+    }, []);
+
+    if (stepsToRemove.length > 0) {
+      steps['disconnect'] = stepsToRemove;
+    }
+
+    const applications = opening.applications.length
+      ? { connect: opening.applications.map(applicationId => ({ id: applicationId })) }
+      : undefined;
+
     opening = {
       ...opening,
       maxSalaryRange: parseFloat(opening.maxSalaryRange),
-      applications: opening.applications.length
-        ? { connect: opening.applications.map(applicationId => ({ id: applicationId })) }
-        : undefined,
-      steps: opening.steps.length ? { connect: opening.steps.map(openingId => ({ id: openingId })) } : undefined
+      applications,
+      steps
     };
 
     createUpdateOpeningFn({
@@ -145,6 +179,7 @@ class OpeningDialog extends PureComponent {
                     lineDirection="left"
                     placeholder="Add Job Title"
                     defaultValue={opening.jobTitle || undefined}
+                    onChange={value => this.updateOpeningField('jobTitle', value)}
                     required
                     errorText={`this field is required`}
                   />
@@ -197,7 +232,7 @@ class OpeningDialog extends PureComponent {
                       const step = steps.find(step => step.id === stepId);
                       return step ? (
                         <ListItem key={step.id} primaryText={step.name} renderChildrenOutside>
-                          <Button icon>
+                          <Button icon onClick={() => this.deleteStep(step.id)}>
                             <FontIcon>delete</FontIcon>
                           </Button>
                         </ListItem>
@@ -224,15 +259,7 @@ class OpeningDialog extends PureComponent {
                       <List>
                         {opening.applications.map(applicationId => {
                           const application = applications.find(application => application.id === applicationId);
-                          return application ? (
-                            <ListItem key={application.id} primaryText={application.candidate.name} renderChildrenOutside>
-                              <Button icon>
-                                <FontIcon>delete</FontIcon>
-                              </Button>
-                            </ListItem>
-                          ) : (
-                            ''
-                          );
+                          return application ? <ListItem key={application.id} primaryText={application.candidate.name}></ListItem> : '';
                         })}
                       </List>
                     </Fragment>

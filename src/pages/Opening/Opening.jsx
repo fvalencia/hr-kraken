@@ -1,15 +1,19 @@
 import { gql } from 'apollo-boost';
 import React, { Component, Fragment } from 'react';
 import { Mutation, Query } from 'react-apollo';
-import { Button, DataTable, TableHeader, TableBody, TableRow, TableColumn, MenuButtonColumn, FontIcon } from 'react-md';
+import { Button, DataTable, TableHeader, TableBody, TableRow, TableColumn, Snackbar, MenuButtonColumn, FontIcon } from 'react-md';
 import { withRouter } from 'react-router-dom';
 import OpeningDialog from './Dialog';
 import Loading from '../../components/Loading';
 import NumberFormat from 'react-number-format';
+import ConfirmDialog from '../../components/ConfirmDialog';
 
 class Opening extends Component {
   state = {
-    showOpeningDialog: false
+    showOpeningDialog: false,
+    openingToDelete: null,
+    alertVisible: false,
+    toasts: []
   };
 
   emptyOpening = {
@@ -55,12 +59,58 @@ class Opening extends Component {
     this.showDialog();
   };
 
-  onClickDelete = openingToEdit => {
-    this.opening = openingToEdit;
-    this.showDialog();
+  onClickDelete = openingToDelete => {
+    this.setState({ openingToDelete: openingToDelete.id, alertVisible: true });
+  };
+
+  onDeleteEvent = (event, deleteApplicationFn) => {
+    if (event === 'confirm') {
+      const { openingToDelete } = this.state;
+      deleteApplicationFn({
+        variables: {
+          where: {
+            id: openingToDelete
+          }
+        }
+      });
+    }
+  };
+
+  onSaveSuccess = () => {
+    if (this.opening.id) {
+      this.addToast('Opening Updated Successfully!');
+    } else {
+      this.addToast('Opening Added Successfully!');
+    }
+    this.hideDialog();
+  };
+
+  onDeleteSuccess = () => {
+    this.addToast('Opening Deleted Successfully!');
+    this.setState({ toDeleteApplication: null, alertVisible: false });
+  };
+
+  onSaveError = error => {
+    if (error.message) {
+      this.addToast(error.message);
+    } else {
+      this.addToast('Something happened, check the info and try again...');
+    }
+  };
+
+  addToast = message => {
+    this.setState({
+      toasts: [...this.state.toasts, { text: message }]
+    });
+  };
+
+  dismissToast = () => {
+    const [, ...toasts] = this.state.toasts;
+    this.setState({ toasts });
   };
 
   render() {
+    const { toasts, alertVisible } = this.state;
     return (
       <Fragment>
         <h1>Openings</h1>
@@ -110,22 +160,41 @@ class Opening extends Component {
             );
           }}
         </Query>
-        <Mutation mutation={!this.opening.id ? ADD_OPENING : UPDATE_OPENING} onCompleted={() => this.hideDialog()}>
+        <Mutation
+          mutation={!this.opening.id ? ADD_OPENING : UPDATE_OPENING}
+          onCompleted={this.onSaveSuccess}
+          onError={this.onSaveError}
+          refetchQueries={[{ query: OPENING_QUERY }]}
+          awaitRefetchQueries={true}
+        >
           {createUpdateOpening => (
             <OpeningDialog
               showDialog={this.state.showOpeningDialog}
-              opening={this.opening}
+              openingToEdit={this.opening}
               hideModal={this.hideDialog}
-              // onCloseModal={this.onCloseModal}
               createUpdateMutation={createUpdateOpening}
-              // type={key}
-              // key={key}
             />
           )}
         </Mutation>
-        <Button floating primary onClick={this.showDialog}>
+        <Mutation
+          mutation={DELETE_OPENING}
+          onCompleted={this.onDeleteSuccess}
+          refetchQueries={[{ query: OPENING_QUERY }]}
+          awaitRefetchQueries={true}
+        >
+          {deleteOpening => (
+            <ConfirmDialog
+              visible={alertVisible}
+              title="Alert"
+              message="Do you want to delete this opening?"
+              onEvent={e => this.onDeleteEvent(e, deleteOpening)}
+            />
+          )}
+        </Mutation>
+        <Button floating primary className="bottom-right" onClick={this.showDialog}>
           <FontIcon>add</FontIcon>
         </Button>
+        <Snackbar toasts={toasts} autohide={true} onDismiss={this.dismissToast} />
       </Fragment>
     );
   }
@@ -161,6 +230,14 @@ const ADD_OPENING = gql`
 const UPDATE_OPENING = gql`
   mutation UpdateOpening($data: OpeningUpdateInput!, $where: OpeningWhereUniqueInput!) {
     updateOpening(data: $data, where: $where) {
+      id
+    }
+  }
+`;
+
+const DELETE_OPENING = gql`
+  mutation UpdateOpening($where: OpeningWhereUniqueInput!) {
+    deleteOpening(where: $where) {
       id
     }
   }

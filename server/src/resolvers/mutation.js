@@ -32,7 +32,7 @@ module.exports = {
     return context.prisma.deleteCandidate(where);
   },
   createOpening(_, { data }, context) {
-    return context.prisma.upsertCandidate(data);
+    return context.prisma.createOpening(data);
   },
   updateOpening(_, { data, where }, context) {
     return context.prisma.updateOpening({ data, where });
