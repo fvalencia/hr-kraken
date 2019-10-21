@@ -13,7 +13,6 @@ const getInitialState = () => ({
     name: null,
     steps: [] // ? can be null?
   },
-  isUpdating: false,
   toasts: []
 });
 
@@ -33,7 +32,7 @@ export default class UpsertTemplateModal extends Component {
   };
 
   saveTemplate = upsertTemplateFn => {
-    const { template, isUpdating } = this.state;
+    const { template } = this.state;
     let templateToUpsert, where;
     const stepsIds = template.steps.map(s => ({ id: s.id }));
 
@@ -45,7 +44,7 @@ export default class UpsertTemplateModal extends Component {
     };
 
     // Editing template
-    if (isUpdating) {
+    if (this.props.entity) {
       where = { id: templateToUpsert.id };
 
       // Remove unaccepted props in template object to update
@@ -72,7 +71,8 @@ export default class UpsertTemplateModal extends Component {
 
   // * Can received data of new template added
   upsertTemplateComplete = () => {
-    if (this.props.template) {
+    this.props.onHide();
+    if (this.props.entity) {
       this.addToast('Template Updated Successfully!');
     } else {
       this.addToast('New template Added Successfully!');
@@ -81,13 +81,6 @@ export default class UpsertTemplateModal extends Component {
     if (this.props.afterUpsertSuccess) {
       this.props.afterUpsertSuccess();
     }
-
-    this.hideAndResetModal();
-  };
-
-  hideAndResetModal = () => {
-    this.setState(getInitialState());
-    this.props.onHide();
   };
 
   dismissToast = () => {
@@ -121,32 +114,25 @@ export default class UpsertTemplateModal extends Component {
     this.setState({
       template: updatedTemplate
     });
-    console.log('template in state', template);
-    console.log('updated template', updatedTemplate);
   };
 
   componentDidUpdate(prevProps) {
     // * it's important to always compare props before performing an action
-    if (!prevProps.template && !!this.props.template) {
+    if (!prevProps.entity && !!this.props.entity) {
       this.setState({
-        template: this.props.template,
-        isUpdating: true
+        template: this.props.entity
       });
     }
   }
 
   render() {
-    const { visible, allSteps } = this.props;
-    const { toasts, isUpdating, template } = this.state;
+    const { visible, onHide, allSteps } = this.props;
+    const { toasts, template } = this.state;
     const { name, steps } = template;
-    let modalTitle;
-
-    if (isUpdating) {
+    let modalTitle = 'New Template';
+    if (this.props.entity) {
       modalTitle = 'Edit Template';
-    } else {
-      modalTitle = 'New Template';
     }
-
     // TODO: disable conditionally save button when editing a template
     const saveButtonDisabled = !name || !steps.length;
 
@@ -170,12 +156,12 @@ export default class UpsertTemplateModal extends Component {
             <DialogContainer
               id="new-template-dialog"
               visible={visible}
-              onHide={this.hideAndResetModal}
+              onHide={onHide}
               actions={[
                 {
                   secondary: true,
                   children: 'Cancel',
-                  onClick: this.hideAndResetModal
+                  onClick: onHide
                 },
                 {
                   secondary: false,
@@ -240,10 +226,10 @@ const UPSERT_TEMPLATE = gql`
   }
 `;
 
+// ? specify entity structure
 UpsertTemplateModal.propTypes = {
   visible: PropTypes.bool.isRequired,
-  onHide: PropTypes.func.isRequired,
-  template: PropTypes.object,
+  entity: PropTypes.object,
   afterUpsertSuccess: PropTypes.func,
   allSteps: PropTypes.array.isRequired
 };

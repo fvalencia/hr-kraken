@@ -40,7 +40,7 @@ export default class UpsertCandidateModal extends Component {
     let candidateToUpsert, where;
 
     // Editing candidate
-    if (this.props.candidate) {
+    if (this.props.entity) {
       // clear keys with null values (as they haven't change with the form, they're null in the state)
       for (const key in candidate) {
         if (candidate.hasOwnProperty(key)) {
@@ -50,7 +50,7 @@ export default class UpsertCandidateModal extends Component {
         }
       }
 
-      candidateToUpsert = { ...this.props.candidate, ...candidate };
+      candidateToUpsert = { ...this.props.entity, ...candidate };
       where = { id: candidateToUpsert.id };
 
       // Remove unaccepted props in candidate object to update
@@ -70,7 +70,7 @@ export default class UpsertCandidateModal extends Component {
   // * Can received data of new candidate added
   upsertCandidateComplete = () => {
     this.props.onHide();
-    if (this.props.candidate) {
+    if (this.props.entity) {
       this.addToast('Candidate Updated Successfully!');
     } else {
       this.addToast('New Candidate Added Successfully!');
@@ -97,9 +97,9 @@ export default class UpsertCandidateModal extends Component {
 
     let modalTitle = 'New Candidate';
     let { candidate } = this.state;
-    if (this.props.candidate) {
+    if (this.props.entity) {
       modalTitle = 'Edit Candidate';
-      candidate = this.props.candidate;
+      candidate = this.props.entity;
     }
     const {
       name,
@@ -235,8 +235,9 @@ const UPSERT_CANDIDATE = gql`
   }
 `;
 
+// TODO: specify entity structure
 UpsertCandidateModal.propTypes = {
   visible: PropTypes.bool.isRequired,
-  candidate: PropTypes.object,
+  entity: PropTypes.object,
   afterUpsertSuccess: PropTypes.func
 };
