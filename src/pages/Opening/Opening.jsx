@@ -28,7 +28,7 @@ class Opening extends Component {
   };
 
   opening = this.emptyOpening;
-  headers = ['Job Title', 'Job Description', 'Company', 'Max Salary Range', 'status'];
+  headers = ['Job Title', 'Job Description', 'Company', 'Max Salary Range', 'Status'];
   menuItems = [
     {
       key: 'edit',
@@ -53,9 +53,11 @@ class Opening extends Component {
   };
 
   onClickEdit = openingToEdit => {
-    openingToEdit.steps = openingToEdit.steps.map(step => step.id);
-    openingToEdit.applications = openingToEdit.applications.map(application => application.id);
-    this.opening = openingToEdit;
+    this.opening = {
+      ...openingToEdit,
+      steps: openingToEdit.steps.map(step => step.id),
+      applications: openingToEdit.applications.map(application => application.id)
+    };
     this.showDialog();
   };
 
@@ -161,7 +163,7 @@ class Opening extends Component {
           }}
         </Query>
         <Mutation
-          mutation={!this.opening.id ? ADD_OPENING : UPDATE_OPENING}
+          mutation={UPSERT_OPENING}
           onCompleted={this.onSaveSuccess}
           onError={this.onSaveError}
           refetchQueries={[{ query: OPENING_QUERY }]}
@@ -219,17 +221,9 @@ const OPENING_QUERY = gql`
   }
 `;
 
-const ADD_OPENING = gql`
-  mutation AddOpening($data: OpeningCreateInput!) {
-    createOpening(data: $data) {
-      id
-    }
-  }
-`;
-
-const UPDATE_OPENING = gql`
-  mutation UpdateOpening($data: OpeningUpdateInput!, $where: OpeningWhereUniqueInput!) {
-    updateOpening(data: $data, where: $where) {
+const UPSERT_OPENING = gql`
+  mutation upsertOpening($where: OpeningWhereUniqueInput!, $create: OpeningCreateInput!, $update: OpeningUpdateInput!) {
+    upsertOpening(where: $where, create: $create, update: $update) {
       id
     }
   }

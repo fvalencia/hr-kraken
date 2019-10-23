@@ -31,11 +31,8 @@ module.exports = {
   deleteCandidate(_, { where }, context) {
     return context.prisma.deleteCandidate(where);
   },
-  createOpening(_, { data }, context) {
-    return context.prisma.createOpening(data);
-  },
-  updateOpening(_, { data, where }, context) {
-    return context.prisma.updateOpening({ data, where });
+  upsertOpening(_, { where, create, update }, context) {
+    return context.prisma.upsertOpening({ where, create, update });
   },
   deleteOpening(_, { where }, context) {
     return context.prisma.deleteOpening(where);

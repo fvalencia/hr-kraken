@@ -4,6 +4,7 @@ import { Query } from 'react-apollo';
 import { Button, DialogContainer, FontIcon, List, ListItem, TextField } from 'react-md';
 import Select from '../../components/Select';
 import Loading from '../../components/Loading';
+import PropTypes from 'prop-types';
 import './Dialog.scss';
 
 class OpeningDialog extends PureComponent {
@@ -66,32 +67,13 @@ class OpeningDialog extends PureComponent {
     });
   };
 
-  selectApplication = application => {
-    this.setState({
-      opening: {
-        ...this.state.opening,
-        applications: [...this.state.opening.applications, application]
-      }
-    });
-  };
-
-  deleteApplication = application => {
-    const applications = this.state.opening.applications.filter(openingApp => openingApp !== application);
-    this.setState({
-      opening: {
-        ...this.state.opening,
-        applications
-      }
-    });
-  };
-
   updateOpeningField = (field, value) => {
     this.setState({ opening: { ...this.state.opening, [field]: value } });
   };
 
   onSubmit = createUpdateOpeningFn => {
     let opening = this.state.opening;
-    const where = opening.id ? { id: opening.id } : undefined;
+    const where = opening.id ? { id: opening.id } : { id: '' };
 
     // deletes not allowed properties
     delete opening['__typename'];
@@ -110,20 +92,16 @@ class OpeningDialog extends PureComponent {
       steps['disconnect'] = stepsToRemove;
     }
 
-    const applications = opening.applications.length
-      ? { connect: opening.applications.map(applicationId => ({ id: applicationId })) }
-      : undefined;
-
     opening = {
       ...opening,
       maxSalaryRange: parseFloat(opening.maxSalaryRange),
-      applications,
       steps
     };
 
     createUpdateOpeningFn({
       variables: {
-        data: opening,
+        create: opening,
+        update: opening,
         where
       }
     });
@@ -166,9 +144,6 @@ class OpeningDialog extends PureComponent {
               if (error) return <p>Something went wrong</p>;
               const { steps, applications } = data;
               const filteredSteps = steps.filter(step => opening.steps.every(opStepId => opStepId !== step.id));
-              const filteredApplications = applications.filter(application =>
-                opening.applications.every(opAppId => opAppId !== application.id)
-              );
               this.isLoading = false;
               return (
                 <Fragment>
@@ -241,31 +216,6 @@ class OpeningDialog extends PureComponent {
                       );
                     })}
                   </List>
-                  {opening.id ? (
-                    <Fragment>
-                      <Select
-                        defaultValue={undefined}
-                        label="Applications"
-                        required={false}
-                        placeholder="Select an Application Candidate"
-                        searchPlaceholder="Search by Application Candidate"
-                        onChange={value => this.selectApplication(value)}
-                        menuItems={
-                          filteredApplications && filteredApplications.length
-                            ? filteredApplications.map(application => ({ value: application.id, label: application.candidate.name }))
-                            : []
-                        }
-                      />
-                      <List>
-                        {opening.applications.map(applicationId => {
-                          const application = applications.find(application => application.id === applicationId);
-                          return application ? <ListItem key={application.id} primaryText={application.candidate.name}></ListItem> : '';
-                        })}
-                      </List>
-                    </Fragment>
-                  ) : (
-                    ''
-                  )}
                   <Select
                     defaultValue={opening.status}
                     label="Opening Status"
@@ -273,6 +223,25 @@ class OpeningDialog extends PureComponent {
                     onChange={value => this.updateOpeningField('status', value)}
                     menuItems={this.openingStatus.map(status => ({ value: status, label: status }))}
                   />
+                  {opening.applications && opening.applications.length ? (
+                    <Fragment>
+                      <h6 className="md-subheading-1">Applications (Read Only)</h6>
+                      <ul>
+                        {opening.applications.map(applicationId => {
+                          const application = applications.find(application => application.id === applicationId);
+                          return application ? (
+                            <li key={application.id} className="md-body-1">
+                              {application.candidate.name}
+                            </li>
+                          ) : (
+                            ''
+                          );
+                        })}
+                      </ul>
+                    </Fragment>
+                  ) : (
+                    ''
+                  )}
                 </Fragment>
               );
             }}
@@ -299,3 +268,10 @@ const applicationAndStepsQuery = gql`
 `;
 
 export default OpeningDialog;
+
+OpeningDialog.propTypes = {
+  showDialog: PropTypes.bool.isRequired,
+  openingToEdit: PropTypes.object.isRequired,
+  hideModal: PropTypes.func.isRequired,
+  createUpdateMutation: PropTypes.func.isRequired
+};
