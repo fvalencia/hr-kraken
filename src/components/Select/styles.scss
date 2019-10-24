@@ -8,3 +8,14 @@
     font-size: 13px;
   }
 }
+
+#custom-select-menu {
+  label {
+    align-items: center;
+    display: flex;
+
+    i {
+      margin-right: 5px;
+    }
+  }
+}

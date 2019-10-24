@@ -40,6 +40,24 @@ export const routes = [
     label: 'Applications',
     icon: 'done_all',
     to: '/applications'
+  },
+  {
+    key: 'tools',
+    label: 'Tools',
+    icon: 'build',
+    to: '/tools',
+    routes: [
+      {
+        key: 'steps',
+        label: 'Steps',
+        to: '/tools/steps'
+      },
+      {
+        key: 'templateSteps',
+        label: 'Template Steps',
+        to: '/tools/template-steps'
+      }
+    ]
   }
   // If you need a divider or a subheader
   //   { key: 'divider', divider: true },
