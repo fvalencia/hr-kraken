@@ -1,4 +1,12 @@
 module.exports = {
+  applicationsConnection: (parent, args, context) => {
+    return {
+      pageInfo: context.prisma.applicationsConnection(args).pageInfo(),
+      edges: context.prisma.applicationsConnection(args).edges(),
+      // should we use args on aggregate? I think we need all the count
+      aggregate: context.prisma.applicationsConnection().aggregate()
+    };
+  },
   applications: (parent, args, context) => {
     return context.prisma.applications(args);
   },

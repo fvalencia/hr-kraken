@@ -2,7 +2,18 @@ import React, { Component, Fragment } from 'react';
 import { Query, Mutation } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import { gql } from 'apollo-boost';
-import { DataTable, TableHeader, TableBody, TableRow, TableColumn, MenuButtonColumn, FontIcon, Snackbar, TextField } from 'react-md';
+import {
+  DataTable,
+  TableHeader,
+  TableBody,
+  TableRow,
+  TableColumn,
+  MenuButtonColumn,
+  FontIcon,
+  Snackbar,
+  TextField,
+  TablePagination
+} from 'react-md';
 import Moment from 'react-moment';
 import { DATE_FORMAT } from '../../constants/dateFormat';
 import ApplicationDialog from './dialog';
@@ -22,10 +33,6 @@ class Application extends Component {
       key: 'endDate',
       name: 'End Date'
     },
-    // {
-    //   key: 'feedback',
-    //   name: 'Feedback'
-    // },
     {
       key: 'responsible',
       name: 'Responsible'
@@ -87,6 +94,10 @@ class Application extends Component {
     this.setState({ textSearch: text });
   };
 
+  handlePagination = (start, rowsPerPage) => {
+    this.setState({ start, rowsPerPage });
+  };
+
   menuItems = [
     {
       key: 'assess',
@@ -103,12 +114,13 @@ class Application extends Component {
 
   render() {
     const headers = this.headers;
-    const { application, alertVisible = false, notifications, textSearch = '' } = this.state;
+    const { application, alertVisible = false, notifications, textSearch = '', start = 0, rowsPerPage = 10 } = this.state;
     const key = application ? application.id : 'create';
+    const page = start * rowsPerPage;
     return (
       <Fragment>
         <h1 className="page-h1">Applications</h1>
-        <Query query={GET_APPLICATIONS}>
+        <Query query={GET_APPLICATIONS} variables={{ skip: page, first: rowsPerPage }}>
           {({ data, loading, error, refetch }) => {
             if (loading) {
               return <Loading />;
@@ -122,7 +134,10 @@ class Application extends Component {
               );
             }
 
-            let { applications } = data;
+            const { edges, aggregate } = data.applicationsConnection;
+
+            const rows = aggregate.count;
+            let applications = edges.map(edge => edge.node);
             applications = textSearch
               ? applications.filter(
                   a =>
@@ -158,12 +173,11 @@ class Application extends Component {
                     </TableHeader>
                     <TableBody>
                       {applications.map(application => {
-                        const { id, startDate, endDate, feedback, responsible, candidate, opening, result } = application;
+                        const { id, startDate, endDate, responsible, candidate, opening, result } = application;
                         return (
                           <TableRow key={id} selectable={false}>
                             <TableColumn>{startDate ? <Moment format={DATE_FORMAT} date={startDate} /> : ''}</TableColumn>
                             <TableColumn>{endDate ? <Moment format={DATE_FORMAT} date={endDate} /> : 'N/A'}</TableColumn>
-                            {/* <TableColumn>{feedback}</TableColumn> */}
                             <TableColumn>{responsible}</TableColumn>
                             <TableColumn>
                               <div className="">
@@ -193,6 +207,13 @@ class Application extends Component {
                         );
                       })}
                     </TableBody>
+                    <TablePagination
+                      rows={rows}
+                      rowsPerPage={10}
+                      defaultPage={page + 1}
+                      rowsPerPageLabel={'Rows per page'}
+                      onPagination={this.handlePagination}
+                    />
                   </DataTable>
                 ) : (
                   <div>
@@ -227,32 +248,46 @@ class Application extends Component {
 }
 
 const GET_APPLICATIONS = gql`
-  {
-    applications {
-      startDate
-      endDate
-      id
-      feedback
-      responsible
-      result
-      candidate {
-        id
-        name
-        email
+  query GetApplications($skip: Int, $first: Int) {
+    applicationsConnection(skip: $skip, first: $first) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
       }
-      opening {
-        id
-        company
-        jobTitle
-        jobDescription
-      }
-      steps {
-        feedback
-        completionDate
-        step {
-          name
+      edges {
+        node {
+          startDate
+          endDate
           id
+          feedback
+          responsible
+          result
+          candidate {
+            id
+            name
+            email
+          }
+          opening {
+            id
+            company
+            jobTitle
+            jobDescription
+          }
+          steps {
+            feedback
+            completionDate
+            step {
+              name
+              id
+            }
+          }
         }
+        cursor
+      }
+      aggregate {
+        count
       }
     }
   }
