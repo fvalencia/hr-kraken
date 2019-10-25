@@ -149,6 +149,7 @@ class ApplicationDialog extends PureComponent {
                     required
                     onChange={value => this.onChange('responsible', value)}
                     errorText={`this field is required`}
+                    disabled={!isCreate ? true : undefined}
                   />
                   <Query query={QUERY}>
                     {({ data }) => {
@@ -162,6 +163,7 @@ class ApplicationDialog extends PureComponent {
                             searchPlaceholder="Search by Name"
                             onChange={value => this.onChange('candidate', value)}
                             menuItems={candidates ? candidates.map(candidate => ({ value: candidate.id, label: candidate.name })) : []}
+                            disabled={!isCreate ? true : undefined}
                           />
                           <Select
                             defaultValue={application.opening || undefined}

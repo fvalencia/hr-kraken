@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { Button } from 'react-md';
 
+import { withPagination } from '../../components/shared/WithPagination';
 import Loading from '../../components/Loading';
 import ErrorIndicator from '../../components/shared/ErrorIndicator';
 import UpsertTemplateModal from '../../components/Templates/UpsertTemplateModal';
@@ -25,8 +26,20 @@ class Templates extends Component {
   render() {
     const { UpsertTemplateModalVisible } = this.state;
     const { getSteps, getTemplates } = this.props;
+    let { paginationInfo, paginationFn } = this.props;
     const loading = getSteps.loading || getTemplates.loading;
-    const error = !!getSteps.error || !!getTemplates.error;
+    let error = !!getSteps.error || !!getTemplates.error;
+
+    let templateSteps = [];
+    if (!loading && getTemplates.templateStepsConnection) {
+      const { edges, aggregate } = getTemplates.templateStepsConnection;
+      
+      // overwrite what we want to change from pagination
+      paginationInfo.rows = aggregate.count;
+      templateSteps = edges.map(edge => edge.node);
+    } else {
+      error = true;
+    } 
 
     return (
       <Fragment>
@@ -45,9 +58,11 @@ class Templates extends Component {
           return (
             <Fragment>
               <TemplatesTable
-                templates={getTemplates.templateSteps}
+                templates={templateSteps}
                 allSteps={getSteps.steps}
                 refetchFn={getTemplates.refetch}
+                paginationInfo={paginationInfo}
+                paginationFn={paginationFn}
               ></TemplatesTable>
               <UpsertTemplateModal
                 visible={UpsertTemplateModalVisible}
@@ -72,14 +87,28 @@ class Templates extends Component {
 }
 
 const TEMPLATE_STEPS_QUERY = gql`
-  {
-    templateSteps {
-      id
-      name
-      steps {
-        id
-        name
-        icon
+  query GetTemplateSteps($skip: Int, $first: Int) {
+    templateStepsConnection(skip: $skip, first: $first) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        node {
+          id
+          name
+          steps {
+            id
+            name
+            icon
+          }
+        }
+        cursor
+      }
+      aggregate {
+        count
       }
     }
   }
@@ -97,6 +126,15 @@ const STEPS_QUERY = gql`
 
 export default compose(
   withRouter,
-  graphql(TEMPLATE_STEPS_QUERY, { name: 'getTemplates' }),
+  withPagination,
+  graphql(TEMPLATE_STEPS_QUERY, {
+    name: 'getTemplates',
+    options: (props) => ({
+      variables: {
+        skip: props.paginationInfo.start,
+        first: props.paginationInfo.rowsPerPage
+      }
+    })
+  }),
   graphql(STEPS_QUERY, { name: 'getSteps' }) // ? error in the second one - app explodes and .error is undefined
 )(Templates);

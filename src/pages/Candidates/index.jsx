@@ -1,9 +1,10 @@
 import React, { Component, Fragment } from 'react';
-import { Query } from 'react-apollo';
+import { Query, compose } from 'react-apollo';
 import { withRouter } from 'react-router-dom';
 import { gql } from 'apollo-boost';
 import { Button } from 'react-md';
 
+import { withPagination } from '../../components/shared/WithPagination';
 import Loading from '../../components/Loading';
 import ErrorIndicator from '../../components/shared/ErrorIndicator';
 import CandidatesTable from '../../components/Candidates/CandidatesTable';
@@ -25,11 +26,12 @@ class Candidates extends Component {
 
   render() {
     const { upsertCandidateModalVisible } = this.state;
+    let { paginationInfo, paginationFn } = this.props;
 
     return (
       <Fragment>
         <h1 className="page-h1">Candidates</h1>
-        <Query query={CANDIDATES_QUERY}>
+        <Query query={CANDIDATES_QUERY} variables={{ skip: paginationInfo.start, first: paginationInfo.rowsPerPage }}>
           {({ data, loading, error, refetch }) => {
             if (loading) {
               return <Loading />;
@@ -41,11 +43,19 @@ class Candidates extends Component {
               );
             }
 
+            const { edges, aggregate } = data.candidatesConnection;
+
+            // overwrite what we want to change from pagination
+            paginationInfo.rows = aggregate.count;
+            const candidates = edges.map(edge => edge.node);
+
             return (
               <Fragment>
                 <CandidatesTable
-                  candidates={data && data.candidates ? data.candidates : []}
+                  candidates={candidates}
                   refetchFn={refetch}
+                  paginationInfo={paginationInfo}
+                  paginationFn={paginationFn}
                 />
                 <UpsertCandidateModal
                   visible={upsertCandidateModalVisible}
@@ -70,20 +80,37 @@ class Candidates extends Component {
 }
 
 const CANDIDATES_QUERY = gql`
-  {
-    candidates {
-      id
-      name
-      title
-      email
-      yearsOfExperience
-      phone
-      skypeId
-      salaryExpectation
-      seniority
-      status
+  query GetCandidates($skip: Int, $first: Int) {
+    candidatesConnection(skip: $skip, first: $first) {
+      pageInfo {
+        hasNextPage
+        hasPreviousPage
+        startCursor
+        endCursor
+      }
+      edges {
+        node {
+          id
+          name
+          title
+          email
+          yearsOfExperience
+          phone
+          skypeId
+          salaryExpectation
+          seniority
+          status
+        }
+        cursor
+      }
+      aggregate {
+        count
+      }
     }
   }
 `;
 
-export default withRouter(Candidates);
+export default compose(
+  withRouter,
+  withPagination
+)(Candidates);

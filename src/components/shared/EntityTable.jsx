@@ -8,7 +8,8 @@ import {
   TableBody,
   TableRow,
   TableColumn,
-  TextField
+  TextField,
+  TablePagination
 } from 'react-md';
 
 import ColumnKebabMenu from '../shared/ColumnKebabMenu';
@@ -73,6 +74,10 @@ export default class EntityTable extends Component {
     this.setState({ textSearch: text });
   };
 
+  handlePagination = (start, rowsPerPage) => {
+    this.props.paginationFn(start, rowsPerPage);
+  };
+
   menuItems = {
     edit: {
       leftIcon: <FontIcon>edit</FontIcon>,
@@ -80,8 +85,8 @@ export default class EntityTable extends Component {
       onClick: this.editEntity
     },
     delete: {
-      leftIcon: <FontIcon>delete_forever</FontIcon>,
-      primaryText: 'Delete',
+      leftIcon: <FontIcon className="md-text--error">delete_forever</FontIcon>,
+      primaryText: <span className="md-text--error">Delete</span>,
       onClick: this.deleteEntity
     }
   };
@@ -94,7 +99,7 @@ export default class EntityTable extends Component {
       textSearch
     } = this.state;
 
-    const { columns, actionMenuItem, deleteEntityGQL, searchFn } = this.props;
+    const { columns, actionMenuItem, deleteEntityGQL, searchFn, paginationInfo } = this.props;
 
     const entitiesFiltered = textSearch.length
       ? this.props.entities.filter(c => searchFn(c, textSearch))
@@ -114,9 +119,9 @@ export default class EntityTable extends Component {
         </div>
         {entitiesFiltered.length ? (
           <Fragment>
-            <DataTable plain>
+            <DataTable baseId={`table-${this.props.entityName}`}>
               <TableHeader>
-                <TableRow>
+                <TableRow selectable={false}>
                   {columns.map((column, idx) => (
                     <TableColumn key={`column-header-${idx}`}>
                       {column.title}
@@ -128,7 +133,7 @@ export default class EntityTable extends Component {
               <TableBody>
                 {entitiesFiltered.map(entity => (
                   // TODO: entity must have id property
-                  <TableRow key={`entity-row-${entity.id}`}>
+                  <TableRow key={`entity-row-${entity.id}`} selectable={false}>
                     {columns.map((...[, idx]) => (
                       <TableColumn key={`entity-column-${idx}`}>
                         {Array.isArray(entity[columns[idx].propertyName])
@@ -138,15 +143,32 @@ export default class EntityTable extends Component {
                     ))}
                     { Array.isArray(actionMenuItem) && actionMenuItem.length ? (
                       <ColumnKebabMenu
-                        menuItems={actionMenuItem.map(action => ({
-                          ...this.menuItems[action],
-                          onClick: this.menuItems[action].onClick(entity) // update each function with the correspondent entity
-                        }))}
+                        menuItems={actionMenuItem.map(action => {
+                          if (this.menuItems[action.key]) {
+                            return ({
+                              ...this.menuItems[action.key],
+                              onClick: this.menuItems[action.key].onClick(entity) // update each function with the correspondent entity
+                            })
+                          } else {
+                            return ({
+                              ...action,
+                              onClick: action.onClick(entity),
+                              disabled: action.disabled(entity)
+                            });
+                          }
+                        })}
                       />
                     ) : null}
                   </TableRow>
                 ))}
               </TableBody>
+              <TablePagination
+                rows={paginationInfo.rows}
+                rowsPerPage={paginationInfo.rowsPerPage}
+                defaultPage={(paginationInfo.start / paginationInfo.rowsPerPage) + 1}
+                rowsPerPageLabel={'Rows per page'}
+                onPagination={this.handlePagination}
+              />
             </DataTable>
             <Mutation
               mutation={deleteEntityGQL}
@@ -162,13 +184,12 @@ export default class EntityTable extends Component {
                 />
               )}
             </Mutation>
-            {/* TODO: pass custom props for every upsertEntityModal `...this.props.upsertEntityModal.props` */}
-            {React.cloneElement(this.props.upsertEntityModal, {
+            {this.props.upsertEntityModal ? React.cloneElement(this.props.upsertEntityModal, {
               visible: upsertEntityModalVisible,
               onHide: this.closeUpsertEntityModal,
               entity: entityToEdit,
               afterUpsertSuccess: this.props.refetchFn
-            })}
+            }) : null}
           </Fragment>
         ) : (
           <div>
@@ -193,5 +214,11 @@ EntityTable.propTypes = {
   deleteEntityGQL: PropTypes.object,
   upsertEntityModal: PropTypes.object,
   searchFn: PropTypes.func,
-  entityName: PropTypes.string.isRequired
+  entityName: PropTypes.string.isRequired,
+  paginationFn: PropTypes.func,
+  paginationInfo: PropTypes.shape({
+    rows: PropTypes.number,
+    start: PropTypes.number,
+    rowsPerPage: PropTypes.number
+  })
 };

@@ -15,7 +15,7 @@ export default class CandidatesTable extends Component {
   ];
 
   // TODO: ?restrict strings based on menuItems object keys in EntityTable
-  menuItems = ['edit', 'delete'];
+  menuItems = [{ key: 'edit' },  { key: 'delete' }];
 
   searchCandidates = (candidate, textSearch) => {
     return candidate.name.toLowerCase().includes(textSearch.toLowerCase()) ||
@@ -35,6 +35,8 @@ export default class CandidatesTable extends Component {
         refetchFn={refetchFn}
         searchFn={this.searchCandidates}
         entityName="Candidate"
+        paginationInfo={this.props.paginationInfo}
+        paginationFn={this.props.paginationFn}
         upsertEntityModal={
           <UpsertCandidateModal
             visible={false}
@@ -56,5 +58,7 @@ const DELETE_CANDIDATE = gql`
 // TODO: specify candidates structure
 CandidatesTable.propTypes = {
   candidates: PropTypes.array.isRequired,
-  refetchFn: PropTypes.func
+  refetchFn: PropTypes.func,
+  paginationFn: PropTypes.func,
+  paginationInfo: PropTypes.object
 };

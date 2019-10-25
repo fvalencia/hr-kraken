@@ -10,7 +10,7 @@ export default class TemplatesTable extends Component {
     { title: 'Steps', propertyName: 'steps'}
   ];
   // TODO: ?restrict strings based on menuItems object keys in EntityTable
-  menuItems = ['edit', 'delete'];
+  menuItems = [{ key: 'edit' },  { key: 'delete' }];
 
   searchTemplates = (template, textSearch) => {
     return template.name.toLowerCase().includes(textSearch.toLowerCase());
@@ -27,6 +27,8 @@ export default class TemplatesTable extends Component {
         refetchFn={refetchFn}
         searchFn={this.searchTemplates}
         entityName="Template"
+        paginationInfo={this.props.paginationInfo}
+        paginationFn={this.props.paginationFn}
         upsertEntityModal={
           <UpsertTemplateModal
             visible={false}
@@ -50,5 +52,7 @@ const DELETE_TEMPLATE = gql`
 TemplatesTable.propTypes = {
   templates: PropTypes.array.isRequired,
   refetchFn: PropTypes.func,
-  allSteps: PropTypes.array.isRequired
+  allSteps: PropTypes.array.isRequired,
+  paginationFn: PropTypes.func,
+  paginationInfo: PropTypes.object
 };
