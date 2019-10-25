@@ -1,71 +1,14 @@
-# mutation {
-#   post1: createPost(
-#     data: {
-#       title: "Join us for GraphQL Conf 2019 in Berlin"
-#       content: "https://www.graphqlconf.org/"
-#       published: true
-#     }
-#   ) {
-#     id
-#   }
-
-#   post2: createPost(
-#     data: {
-#       title: "Subscribe to GraphQL Weekly for community news"
-#       content: "https://graphqlweekly.com/"
-#       published: true
-#     }
-#   ) {
-#     id
-#   }
-
-#   post3: createPost(
-#     data: {
-#       title: "Follow Prisma on Twitter"
-#       content: "https://twitter.com/prisma"
-#     }
-#   ) {
-#     id
-#   }
-# }
-
 mutation {
-  # candidate1: createCandidate(
-  #   data: {
-  #     name: "Felipe Valencia"
-  #     email: "luisfelipevalenciatellez@gmail.com"
-  #     phone: "+573172146907"
-  #     skypeId: "luisfelipevalenciatellez"
-  #     status: IN_PROGRESS
-  #     applications: {
-  #       create: {
-  #         startDate: "2019-05-20"
-  #         endDate: "2019-06-10"
-  #         feedback: "Excellent applicant"
-  #         result: GOOD
-  #       }
-  #     }
-  #   }
-  # ) {
-  #   id
-  # }
-
-  # step1: createStep(data: { name: "HR First Interview" })
-  # step2: createStep(data: { name: "English Interview" })
-  # step3: createStep(data: { name: "Technical Test" })
-  # step4: createStep(data: { name: "Team Lead Interview" })
-  # step5: createStep(data: { name: "Client Interview" })
-
   templateStep1: createTemplateStep(
     data: {
       name: "Common Template"
       steps: {
         create: [
-          { id: 1, name: "HR First Interview" }
-          { id: 2, name: "English Interview" }
-          { id: 3, name: "Technical Test" }
-          { id: 4, name: "Team Lead Interview" }
-          { id: 5, name: "Client Interview" }
+          { id: 1, name: "HR First Interview", icon: "gif" }
+          { id: 2, name: "English Interview", icon: "grade" }
+          { id: 3, name: "Technical Test", icon: "help" }
+          { id: 4, name: "Team Lead Interview", icon: "http" }
+          { id: 5, name: "Client Interview", icon: "https" }
         ]
       }
     }

@@ -1,0 +1,13 @@
+@import '~react-md/src/scss/react-md';
+
+.md-dialog-content {
+  overflow: unset;
+}
+
+.selected-steps-title {
+  color: $md-primary-color;
+  font-size: 1.1em;
+  font-weight: 500;
+  margin-bottom: 12px;
+  margin-top: 8px;
+}

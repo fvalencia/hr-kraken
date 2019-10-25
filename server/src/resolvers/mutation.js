@@ -19,8 +19,11 @@ module.exports = {
   updateApplication(parent, args, context) {
     return context.prisma.updateApplication(args);
   },
-  createStep(parent, { data }, context) {
-    return context.prisma.createStep(data);
+  upsertStep(_, { where, create, update }, context) {
+    return context.prisma.upsertStep({ where, create, update });
+  },
+  deleteStep(_, { where }, context) {
+    return context.prisma.deleteStep(where);
   },
   upsertCandidate(_, { where, create, update }, context) {
     return context.prisma.upsertCandidate({ where, create, update });
@@ -36,5 +39,11 @@ module.exports = {
   },
   deleteOpening(_, { where }, context) {
     return context.prisma.deleteOpening(where);
+  },
+  upsertTemplateStep(_, { where, create, update }, context) {
+    return context.prisma.upsertTemplateStep({ where, create, update });
+  },
+  deleteTemplateStep(_, { where }, context) {
+    return context.prisma.deleteTemplateStep(where);
   }
 };

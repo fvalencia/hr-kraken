@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { TextField, SelectField } from 'react-md';
 import './styles.scss';
 
@@ -13,9 +14,13 @@ class Select extends Component {
   };
 
   render() {
-    const { label, placeholder, menuItems = [], noSearch, searchPlaceholder, onChange, ...rest } = this.props;
+    const { label, placeholder, menuItems = [], noSearch, searchPlaceholder, onChange, searchFn, ...rest } = this.props;
     const { searchText } = this.state;
-    let items = searchText ? menuItems.filter(item => item.label.toLowerCase().includes(searchText.toLowerCase())) : menuItems;
+    let items = searchText ? searchFn 
+      ? menuItems.filter(item => searchFn(item, searchText))
+      : menuItems.filter(item => item.label.toLowerCase().includes(searchText.toLowerCase()))
+      : menuItems;
+
     if (!noSearch) {
       items = [
         <TextField
@@ -58,5 +63,9 @@ class Select extends Component {
     );
   }
 }
+
+Select.propTypes = {
+  searchFn: PropTypes.func
+};
 
 export default Select;
