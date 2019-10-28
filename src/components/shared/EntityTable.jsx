@@ -132,7 +132,6 @@ export default class EntityTable extends Component {
               </TableHeader>
               <TableBody>
                 {entitiesFiltered.map(entity => (
-                  // TODO: entity must have id property
                   <TableRow key={`entity-row-${entity.id}`} selectable={false}>
                     {columns.map((...[, idx]) => (
                       <TableColumn key={`entity-column-${idx}`}>
@@ -202,7 +201,9 @@ export default class EntityTable extends Component {
 }
 
 EntityTable.propTypes = {
-  entities: PropTypes.array.isRequired,
+  entities: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired
+  })).isRequired,
   refetchFn: PropTypes.func,
   columns: PropTypes.arrayOf(
     PropTypes.shape({

@@ -235,7 +235,6 @@ const UPSERT_CANDIDATE = gql`
   }
 `;
 
-// TODO: specify entity structure
 UpsertCandidateModal.propTypes = {
   visible: PropTypes.bool.isRequired,
   entity: PropTypes.object,

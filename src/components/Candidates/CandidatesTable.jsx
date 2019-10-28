@@ -14,7 +14,6 @@ export default class CandidatesTable extends Component {
     { title: 'Status', propertyName: 'status'}
   ];
 
-  // TODO: ?restrict strings based on menuItems object keys in EntityTable
   menuItems = [{ key: 'edit' },  { key: 'delete' }];
 
   searchCandidates = (candidate, textSearch) => {
@@ -55,9 +54,19 @@ const DELETE_CANDIDATE = gql`
   }
 `;
 
-// TODO: specify candidates structure
 CandidatesTable.propTypes = {
-  candidates: PropTypes.array.isRequired,
+  candidates: PropTypes.arrayOf(PropTypes.shape({
+    email: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    phone: PropTypes.string,
+    salaryExpectation: PropTypes.number,
+    seniority: PropTypes.string.isRequired, //? enum
+    skypeId: PropTypes.string,
+    status: PropTypes.string.isRequired, //? enum
+    title: PropTypes.string.isRequired,
+    yearsOfExperience: PropTypes.number,
+  })).isRequired,
   refetchFn: PropTypes.func,
   paginationFn: PropTypes.func,
   paginationInfo: PropTypes.object

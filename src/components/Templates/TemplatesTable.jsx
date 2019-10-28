@@ -9,7 +9,6 @@ export default class TemplatesTable extends Component {
     { title: 'Name', propertyName: 'name'},
     { title: 'Steps', propertyName: 'steps'}
   ];
-  // TODO: ?restrict strings based on menuItems object keys in EntityTable
   menuItems = [{ key: 'edit' },  { key: 'delete' }];
 
   searchTemplates = (template, textSearch) => {
@@ -48,11 +47,20 @@ const DELETE_TEMPLATE = gql`
   }
 `;
 
-// TODO: specify templates and allSteps structures
+const stepsModel = PropTypes.arrayOf(PropTypes.shape({
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired
+})).isRequired
+
 TemplatesTable.propTypes = {
-  templates: PropTypes.array.isRequired,
+  templates: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    steps: stepsModel
+  })).isRequired,
   refetchFn: PropTypes.func,
-  allSteps: PropTypes.array.isRequired,
+  allSteps: stepsModel,
   paginationFn: PropTypes.func,
   paginationInfo: PropTypes.object
 };

@@ -139,7 +139,6 @@ export default class UpsertTemplateModal extends Component {
     const stepsChips = template.steps.map(step => (
       <StepChip key={step.id} step={step} removeStep={this.removeStep} />
     ));
-    // TODO: all steps but steps already in template
     const tptStepsIds = template.steps.map(step => step.id);
     const filteredSteps = allSteps.filter(
       s => tptStepsIds.indexOf(s.id) === -1

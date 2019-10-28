@@ -70,9 +70,34 @@ const DELETE_APPLICATION = gql`
   }
 `;
 
-// TODO: specify applications structure
 ApplicationsTable.propTypes = {
-  applications: PropTypes.array.isRequired,
+  applications: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    startDate: PropTypes.string.isRequired,
+    endDate: PropTypes.string,
+    feedback: PropTypes.string,
+    responsible: PropTypes.string.isRequired,
+    result: PropTypes.string, //? enum
+    candidate: PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      email: PropTypes.string
+    }),
+    opening: PropTypes.shape({
+      company: PropTypes.string,
+      id: PropTypes.string,
+      jobDescription: PropTypes.string,
+      jobTitle: PropTypes.string,
+    }),
+    steps: PropTypes.arrayOf(PropTypes.shape({
+      completionDate: PropTypes.string,
+      feedback: PropTypes.string,
+      step: PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string,
+      })
+    })).isRequired
+  })).isRequired,
   refetchFn: PropTypes.func,
   paginationFn: PropTypes.func,
   paginationInfo: PropTypes.object,
