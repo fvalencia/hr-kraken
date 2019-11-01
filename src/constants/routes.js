@@ -16,24 +16,7 @@ export const routes = [
     key: 'openings',
     label: 'Openings',
     icon: 'send',
-    to: '/openings',
-    routes: [
-      {
-        key: 'a',
-        label: 'Openings A',
-        to: '/openings/a'
-      },
-      {
-        key: 'b',
-        label: 'Openings B',
-        to: '/openings/b'
-      },
-      {
-        key: 'c',
-        label: 'Openings C',
-        to: '/openings/c'
-      }
-    ]
+    to: '/openings'
   },
   {
     key: 'applications',
